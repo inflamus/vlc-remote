@@ -8,10 +8,10 @@ It uses only html5 and jQuery 1.11.
 An active internet connection is required for this to work (CDN for jQuery)
 
 PRE REQUIES:
-1. VLC > 2.1.x required with Lua support.
+* VLC > 2.1.x required with Lua support.
 
 INSTALL
-* Extract this archive anywhere you can retrieve it, and remember the path.
+* Download as zip and extract, or git clone this repo anywhere you can retrieve it, and remember the path to it.
 * Activate the Web Interface in Preferences > Main interface > check "Web"
 * Overwrite the default web interface : Expand the Main interface tree and select the "Lua" setting
 * In the section Lua HTTP : define a password
