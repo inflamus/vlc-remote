@@ -1,0 +1,12 @@
+CACHE MANIFEST
+
+CACHE:
+css/ratchet.min.css
+img/vlc-48.png
+img/vlc16x16.png
+js/ratchet.min.js
+js/vlc.min.js
+http://code.jquery.com/jquery-1.11.0.min.js
+
+NETWORK:
+*
