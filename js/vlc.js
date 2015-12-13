@@ -475,7 +475,7 @@ VLC.prototype =
 		if(this.status.fullscreen == true)
 			if(!this.nav.fullscreen.hasClass('active'))
 				this.nav.fullscreen.addClass('active');
-			else;
+			else{}
 		else
 			this.nav.fullscreen.removeClass('active');
 		if(this.status.state == 'playing')
@@ -546,9 +546,15 @@ VLC.prototype =
 			that.plModal.append('<li class="table-view-divider">'+this.name+'</li>');
 			$.each(this.children, function(){
 				that.plModal.append(
-					$('<li>', {'class':'table-view-cell'})
-					.append(this.current ? '<span class="media-object pull-left icon icon-play"></span> '+this.name
-						: 	$('<a data-id="'+this.id+'" class="navigate-right" href=javascript:;><span class="badge">'+this.duration.toString().toHHMMSS()+'</span>'+this.name+'</a>')
+					$('<li>', {'class':'table-view-cell media'})
+						.addClass(this.current ? 'primary' : '')
+						.append(
+							$('<a data-id="'+this.id+'" class="navigate-right" href=javascript:;>')
+								.append('<span class="badge">'+this.duration.toString().toHHMMSS()+'</span>')
+								.append($('<img class="media-object pull-left" src="/art?item='+this.id+'">').error(function(){$(this).attr('src', '/img/vlc-48.png')}))
+								.append('<div class="media-body">'+
+									(this.current ? '<span class="media-object pull-left icon icon-play"></span> ' : '')
+									+this.name+'</div>')
 								.click(function(){
 									that.Play($(this).attr('data-id')).plModal.parent().parent().removeClass('active');
 								})
@@ -923,7 +929,19 @@ $(document).ready(function(){
 			'}'+
 		'input[type=range]:focus::-ms-fill-upper {'+
 			'background: rgba(255, 255, 255, 0.96);'+
+			'}'+
+		'li.table-view-cell.media a img.media-object {'+
+			'width: 60px;'+
+			'}'+
+		'li.table-view-cell.primary {'+
+			'background-color: #ffe0cc;'+
+// 			'border-color: #da532c;'+
+// 			'border-top: 1px solid #da532c;'+
 			'}'
+// 		'li.table-view-cell ~ li.table-view-cell {'+
+// 			'background-color: #eee;'+
+// 			'border-color: #da532c;'+
+// 			'}'
 
 		));
 });
