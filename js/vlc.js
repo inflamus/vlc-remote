@@ -39,7 +39,9 @@ function VLC()
       <h1 class="title"><img src=img/vlc16x16.png alt=vlclogo class="icon" /> VLC - Remote Controller</h1>
     </header>*/
 	that = this;
-	
+	$(window).resize(function(){
+		that.updateSliderSize();
+	});
 	this.titleBar = $('<header>', {'class':'bar bar-nav'})
 		.append('<h1 class="title"><img src=img/vlc16x16.png alt="VideoLan Logo" class="icon" /> VLC - Remote Controller</h1>')
 		.append('<a class="icon icon-gear pull-right" href=#settings></a>')
@@ -69,8 +71,15 @@ function VLC()
 			return;
 		})
 		.appendTo(this.content);
-	this.albumArt = $('<img id="albumArt" style="margin-top:44px; margin-bottom:44px;margin-left: auto; margin-right:auto; max-width:100%;" alt=albumart src="img/vlc-48.png" />').appendTo(this.slide);
-	this.durationInfo = $('<span class="slide-text">').appendTo(this.slide);
+	this.albumArt = $('<img id="albumArt" style="margin-top:44px; margin-bottom:88px;margin-left: auto; margin-right:auto; max-width:100%;" alt=albumart src="img/vlc-48.png" />').appendTo(this.slide);
+// 	this.durationInfo = $('<span class="slide-text">').appendTo(this.slide);
+// 	this.durationSlider = $('<input type="range" min="0" max="1" step=".001">').appendTo(this.slide)
+// 		.on('mouseup touchend', function(){
+// 			that.Seek(Math.round($(this).val()*that.status.length));
+// 		})
+// 		.on('change', function(){
+// 			that.updateDuration($(this).val());
+// 		});
 	this.errorDiv = $('<div>', {'class':'error'}).appendTo(this.content);
 	
 	this.navBar = $('<nav>', {'class':'bar bar-tab'}).appendTo('body'); 
@@ -171,64 +180,64 @@ VLC.prototype =
 		return this;
 	},
 	
-	_Timeout: false, // used to chose between seek and move in chapters/playlist
+// 	_Timeout: false, // used to chose between seek and move in chapters/playlist
 	Next:function()
 	{
-		if(arguments.length == 0)
-		{
-			that=this;
-			if(this._Timeout)
-			{
-				clearTimeout(this._Timeout);
+// 		if(arguments.length == 0)
+// 		{
+// 			that=this;
+// 			if(this._Timeout)
+// 			{
+// 				clearTimeout(this._Timeout);
 				if(this.status.information.chapters.length > 1 && this.status.information.chapter < this.status.information.chapters.length && useChapters)
 					this.sendCommand({'command':'chapter', 'val':this.status.information.chapter+1});
 				else
 					this.sendCommand('pl_next');
-				this._Timeout = setTimeout(function(){
-					clearTimeout(that._Timeout);
-					that._Timeout = false;},
-					5000);
-			}
-			else
-			{
-				this._Timeout = setTimeout(function(){that.Next(1)}, 1000);
-			}
-		}
-		else
-		{
-			this._Timeout = false;
-			this.Seek('+'+forwardDuration+'s');
-		}
+// 				this._Timeout = setTimeout(function(){
+// 					clearTimeout(that._Timeout);
+// 					that._Timeout = false;},
+// 					5000);
+// 			}
+// 			else
+// 			{
+// 				this._Timeout = setTimeout(function(){that.Next(1)}, 1000);
+// 			}
+// 		}
+// 		else
+// 		{
+// 			this._Timeout = false;
+// 			this.Seek('+'+forwardDuration+'s');
+// 		}
 		return this;
 	},
 	
 	Prev: function()
 	{
-		if(arguments.length == 0)
-		{
-			that=this;
-			if(this._Timeout)
-			{
-				clearTimeout(this._Timeout);
+// 		if(arguments.length == 0)
+// 		{
+// 			that=this;
+// 			if(this._Timeout)
+// 			{
+// 				clearTimeout(this._Timeout);
 				if(this.status.information.chapters.length > 1 && this.status.information.chapter > 0 && useChapters)
 					this.sendCommand({'command':'chapter', 'val':this.status.information.chapter-1});
 				else
 					this.sendCommand('pl_previous');
-				this._Timeout = setTimeout(function(){
-					clearTimeout(that._Timeout);
-					that._Timeout = false;},
-					5000);
-			}
-			else
-			{
-				this._Timeout = setTimeout(function(){that.Prev(1)}, 1000);
-			}
-		}
-		else
-		{
-			this._Timeout = false;
-			this.Seek('-'+backwardDuration+'s');
-		}
+// 				this._Timeout = setTimeout(function(){
+// 					clearTimeout(that._Timeout);
+// 					that._Timeout = false;},
+// 					5000);
+// 			}
+// 			else
+// 			{
+// 				this._Timeout = setTimeout(function(){that.Prev(1)}, 1000);
+// 			}
+// 		}
+// 		else
+// 		{
+// 			this._Timeout = false;
+// 			this.Seek('-'+backwardDuration+'s');
+// 		}
 		return this;
 	},
 	
@@ -495,9 +504,38 @@ VLC.prototype =
 			break;
 		}
 		
-		this.durationInfo.text(
-			(this.status.position*this.status.length).toString().toHHMMSS() +' — '+this.status.length.toString().toHHMMSS()
-		);
+		this.refreshDuration();
+		return this;
+	},
+	
+	refreshDuration: function()
+	{
+		this.updateDuration(this.status.position);
+		if(this.durationSlider)
+			this.updateSliderSize()
+				.val(this.status.position);
+		return this;
+	},
+	
+	updateSliderSize: function()
+	{
+		return this.durationSlider
+			.css('width', function(){ 
+				return $(this).parent().outerWidth() - 
+					$(this).parent()
+						.find('button.pull-left').outerWidth() -
+					$(this).parent()
+						.find('button.pull-right').outerWidth()
+					- 42
+					+'px';
+			});
+	},
+	
+	updateDuration: function(d)
+	{
+		if(!this.durationInfo1)	return this;
+		this.durationInfo1.text((d*this.status.length).toString().toHHMMSS());
+		this.durationInfo2.text(this.status.length.toString().toHHMMSS());
 		return this;
 	},
 	
@@ -672,17 +710,33 @@ VLC.prototype =
 						 )
 
 						.appendTo('body');
-// 					that.nSecFooter = $('<div>', {'class':'bar bar-standard bar-footer-secondary'})
+					
+					that.nSecFooter = $('<div>', {'class':'bar bar-standard bar-footer-secondary', 'css':{'bottom':'50px'}})
+						.append(that.durationInfo1 = $('<button>', {'type':'button', 'class':'btn pull-left control-item'})
+							.on('click', function(){ that.Seek('-'+backwardDuration+'s') })
+						)
+						.append(that.durationInfo2 = $('<button>', {'type':'button', 'class':'btn pull-right control-item'})
+							.on('click', function(){ that.Seek('+'+forwardDuration+'s') })
+						)
+							.append(that.durationSlider = 
+								$('<input type="range" min="0" max="1" step=".001">')
+									.on('mouseup touchend', function(){
+										that.Seek(Math.round($(this).val()*that.status.length));
+										
+									})
+									.on('change', function(){
+										that.updateDuration($(this).val());
+										
+									})
+							)
 // 						.append($('<a>', {'class':'btn pull-left'}).append('Prev'))
 // 						.append($('<a>', {'class':'btn pull-right'}).append('Next'))
-// // 						.append($('<a>', {'class':'btn', text:'Chapters'}))
-// 						.appendTo('body');
-
-
+// 						.append($('<a>', {'class':'btn', text:'Chapters'}))
+						.appendTo('body');
+					that.refreshDuration();
 // 					console.log(meta);
 					that.actualImg = meta.filename;
 				});
-
 // 			this.albumArt.fadeIn(500, function () {
 // 				$(this).removeAttr('height').removeAttr('width')
 // 				console.log($(this).text());
@@ -691,7 +745,10 @@ VLC.prototype =
 		else
 		{
 			if(this.nSecondary)
+			{
 				this.nSecondary.remove();
+				this.nSecFooter.remove();
+			}
 			this.albumArt.attr('src', 'img/vlc-48.png');
 		}
 			
@@ -765,15 +822,108 @@ $(document).ready(function(){
 // 			'-o-filter: grayscale(100%);'+
 // 			'filter: gray; /* IE6+ */'+
 // 			'}'+
-		'.slider .slide-group .slide-text {'+
-			'position: absolute;'+
-			'top: 45%;'+
+// 		'.slider .slide-group .slide-text {'+
+// 			'position: absolute;'+
+// 			'font-weight: bold;'+
+// 			'top: 80%;'+
+// 			'left: 0;'+
+// 			'width: 100%;'+
+// 			'font-size: 24px;'+
+// 			'color: #fff;'+
+// 			'text-align: center;'+
+// 			'text-shadow: 0 0 8px #da532c;'+
+// 			'}'+
+//CSS greatly generated with http://danielstern.ca/range.css/
+		'input[type=range] {'+
+			'-webkit-appearance: none;'+
+// 			'position: absolute;'+
+			'position: relative;'+
+			'top: 8px;'+
 			'left: 0;'+
+// 			'top: 86%;'+
+// 			'width: 85%;'+
+// 			'margin: 4px 1%;'+
+			'}'+
+		'input[type=range]:focus {'+
+			'outline: none;'+
+			'}'+
+		'input[type=range]::-webkit-slider-runnable-track {'+
 			'width: 100%;'+
-			'font-size: 24px;'+
-			'color: #fff;'+
-			'text-align: center;'+
-			'text-shadow: 0 0 8px #da532c;'+
+			'height: 8px;'+
+			'cursor: pointer;'+
+			'box-shadow: 1px 1px 15px #da532c, 0px 0px 1px #de6542;'+
+			'background: rgba(255, 255, 255, 0.96);'+
+			'border-radius: 5px;'+
+			'border: 0px solid #da532c;'+
+			'}'+
+		'input[type=range]::-webkit-slider-thumb {'+
+			'box-shadow: 1px 1px 1px #da532c, 0px 0px 1px #de6542;'+
+			'border: 1px solid #eeeeee;'+
+			'height: 16px;'+
+			'width: 16px;'+
+			'border-radius: 31px;'+
+			'background: #ffffff;'+
+			'cursor: pointer;'+
+			'-webkit-appearance: none;'+
+			'margin-top: -4px;'+
+			'}'+
+		'input[type=range]:focus::-webkit-slider-runnable-track {'+
+			'background: rgba(255, 255, 255, 0.96);'+
+			'}'+
+		'input[type=range]::-moz-range-track {'+
+			'width: 100%;'+
+			'height: 8px;'+
+			'cursor: pointer;'+
+			'box-shadow: 1px 1px 15px #da532c, 0px 0px 1px #de6542;'+
+			'background: rgba(255, 255, 255, 0.96);'+
+			'border-radius: 5px;'+
+			'border: 0px solid #da532c;'+
+			'}'+
+		'input[type=range]::-moz-range-thumb {'+
+			'box-shadow: 1px 1px 1px #da532c, 0px 0px 1px #de6542;'+
+			'border: 1px solid #eeeeee;'+
+			'height: 16px;'+
+			'width: 16px;'+
+			'border-radius: 31px;'+
+			'background: #ffffff;'+
+			'cursor: pointer;'+
+			'}'+
+		'input[type=range]::-ms-track {'+
+			'width: 100%;'+
+			'height: 8px;'+
+			'cursor: pointer;'+
+			'background: transparent;'+
+			'border-color: transparent;'+
+			'color: transparent;'+
+			'}'+
+		'input[type=range]::-ms-fill-lower {'+
+			'background: rgba(240, 240, 240, 0.96);'+
+			'border: 0px solid #da532c;'+
+			'border-radius: 10px;'+
+			'box-shadow: 1px 1px 15px #da532c, 0px 0px 1px #de6542;'+
+			'}'+
+		'input[type=range]::-ms-fill-upper {'+
+			'background: rgba(255, 255, 255, 0.96);'+
+			'border: 0px solid #da532c;'+
+			'border-radius: 10px;'+
+			'box-shadow: 1px 1px 15px #da532c, 0px 0px 1px #de6542;'+
+			'}'+
+		'input[type=range]::-ms-thumb {'+
+			'box-shadow: 1px 1px 1px #da532c, 0px 0px 1px #de6542;'+
+			'border: 1px solid #eeeeee;'+
+			'height: 16px;'+
+			'width: 16px;'+
+			'border-radius: 31px;'+
+			'background: #ffffff;'+
+			'cursor: pointer;'+
+			'height: 8px;'+
+			'}'+
+		'input[type=range]:focus::-ms-fill-lower {'+
+			'background: rgba(255, 255, 255, 0.96);'+
+			'}'+
+		'input[type=range]:focus::-ms-fill-upper {'+
+			'background: rgba(255, 255, 255, 0.96);'+
 			'}'
+
 		));
 });
