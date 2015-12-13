@@ -944,4 +944,7 @@ $(document).ready(function(){
 // 			'}'
 
 		));
+	//load CSS for IOS
+	if( /(iPad|iPhone|iPod)/g.test( navigator.userAgent ) )
+		$('<link>', {'rel':'stylesheet', 'href':'css/ratchet-theme-ios.min.css'}).prependTo('head');
 });

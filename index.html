@@ -1,57 +1,57 @@
 <!DOCTYPE html>
 <!-- <html manifest="appcache.manifest"> -->
 <html>
-  <head>
-    <meta charset="utf-8">
-    <title>VLC - Remote Controller</title>
+	<head>
+		<meta charset="utf-8">
+		<title>VLC - Remote Controller</title>
 
-    <!-- Sets initial viewport load and disables zooming  -->
-    <meta name="viewport" content="initial-scale=1, maximum-scale=1">
+		<!-- Sets initial viewport load and disables zooming  -->
+		<meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no">
+		
+		<!-- Internet Explorer compatibility - useless ? -->
+		<meta http-equiv="X-UA-Compatible" content="IE=edge"> 
 
-    <!-- Makes your prototype chrome-less once bookmarked to your phone's home screen -->
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="white">
+		<!-- Makes your prototype chrome-less once bookmarked to your phone's home screen -->
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="white">
 
-    <!-- Include the compiled Ratchet CSS -->
-    <link href="css/ratchet.min.css" rel="stylesheet">
-    
-<link rel="apple-touch-icon" sizes="57x57" href="img/favicons/apple-touch-icon-57x57.png">
-<link rel="apple-touch-icon" sizes="60x60" href="img/favicons/apple-touch-icon-60x60.png">
-<link rel="apple-touch-icon" sizes="72x72" href="img/favicons/apple-touch-icon-72x72.png">
-<link rel="apple-touch-icon" sizes="76x76" href="img/favicons/apple-touch-icon-76x76.png">
-<link rel="apple-touch-icon" sizes="114x114" href="img/favicons/apple-touch-icon-114x114.png">
-<link rel="apple-touch-icon" sizes="120x120" href="img/favicons/apple-touch-icon-120x120.png">
-<link rel="apple-touch-icon" sizes="144x144" href="img/favicons/apple-touch-icon-144x144.png">
-<link rel="apple-touch-icon" sizes="152x152" href="img/favicons/apple-touch-icon-152x152.png">
-<link rel="apple-touch-icon" sizes="180x180" href="img/favicons/apple-touch-icon-180x180.png">
-<link rel="icon" type="image/png" href="img/favicons/favicon-32x32.png" sizes="32x32">
-<link rel="icon" type="image/png" href="img/favicons/android-chrome-192x192.png" sizes="192x192">
-<link rel="icon" type="image/png" href="img/favicons/favicon-96x96.png" sizes="96x96">
-<link rel="icon" type="image/png" href="img/favicons/favicon-16x16.png" sizes="16x16">
-<link rel="manifest" href="img/favicons/manifest.json">
-<link rel="mask-icon" href="img/favicons/safari-pinned-tab.svg" color="#5bbad5">
-<link rel="shortcut icon" href="img/favicons/favicon.ico">
-<meta name="msapplication-TileColor" content="#da532c">
-<meta name="msapplication-TileImage" content="img/favicons/mstile-144x144.png">
-<meta name="msapplication-config" content="img/favicons/browserconfig.xml">
-<meta name="theme-color" content="#ffffff">
-</head>
-  <body>
-  <noscript>This App entirely relies on Javascript + JQuery. Please enable it.</noscript>
-
-  </body>
-<script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
-<!-- <script type=text/javascript src="js/jquery-1.11.0.js"></script> -->
-    <!-- Include the compiled Ratchet JS -->
-<script type=text/javascript src="js/ratchet.min.js" async></script>
-<!-- <script type=text/javascript src="js/common.js"></script> -->
-<!-- <script type=text/javascript src=js/common_ratchet.js></script> -->
-<script type=text/javascript src="js/vlc.js" async></script>
-<!-- <script type=text/javascript src="js/compiled.js"></script> -->
-<!-- <script type=text/javascript src="js/compiled.adv.min.js"></script> -->
-<!-- <script type=text/javascript src="js/compiled.sim.min.js"></script> -->
-<script type=text/javascript>
-//load CSS for IOS
-if( /(iPad|iPhone|iPod)/g.test( navigator.userAgent ) )		$('<link>', {'rel':'stylesheet', 'href':'css/ratchet-theme-ios.min.css'}).prependTo('head');
-</script>
+		<!-- Include the compiled Ratchet CSS -->
+		<link href="css/ratchet.min.css" rel="stylesheet">
+		
+		<link rel="apple-touch-icon" sizes="57x57" href="img/favicons/apple-touch-icon-57x57.png">
+		<link rel="apple-touch-icon" sizes="60x60" href="img/favicons/apple-touch-icon-60x60.png">
+		<link rel="apple-touch-icon" sizes="72x72" href="img/favicons/apple-touch-icon-72x72.png">
+		<link rel="apple-touch-icon" sizes="76x76" href="img/favicons/apple-touch-icon-76x76.png">
+		<link rel="apple-touch-icon" sizes="114x114" href="img/favicons/apple-touch-icon-114x114.png">
+		<link rel="apple-touch-icon" sizes="120x120" href="img/favicons/apple-touch-icon-120x120.png">
+		<link rel="apple-touch-icon" sizes="144x144" href="img/favicons/apple-touch-icon-144x144.png">
+		<link rel="apple-touch-icon" sizes="152x152" href="img/favicons/apple-touch-icon-152x152.png">
+		<link rel="apple-touch-icon" sizes="180x180" href="img/favicons/apple-touch-icon-180x180.png">
+		<link rel="icon" type="image/png" href="img/favicons/favicon-32x32.png" sizes="32x32">
+		<link rel="icon" type="image/png" href="img/favicons/android-chrome-192x192.png" sizes="192x192">
+		<link rel="icon" type="image/png" href="img/favicons/favicon-96x96.png" sizes="96x96">
+		<link rel="icon" type="image/png" href="img/favicons/favicon-16x16.png" sizes="16x16">
+		<link rel="manifest" href="img/favicons/manifest.json">
+		<link rel="mask-icon" href="img/favicons/safari-pinned-tab.svg" color="#5bbad5">
+		<link rel="shortcut icon" href="img/favicons/favicon.ico">
+		<meta name="msapplication-TileColor" content="#da532c">
+		<meta name="msapplication-TileImage" content="img/favicons/mstile-144x144.png">
+		<meta name="msapplication-config" content="img/favicons/browserconfig.xml">
+		<meta name="theme-color" content="#ffffff">
+	</head>
+	<body>
+	
+		<noscript>This App entirely relies on Javascript + JQuery. Please enable it.</noscript>
+		<script src="//code.jquery.com/jquery-1.11.0.min.js" defer></script>
+		<!-- <script type=text/javascript src="js/jquery-1.11.0.js"></script> -->
+			<!-- Include the compiled Ratchet JS -->
+		<script type="text/javascript" src="js/vlc.js" defer></script>
+		<!-- <script type=text/javascript src="js/compiled.js"></script> -->
+		<!-- <script type=text/javascript src="js/compiled.adv.min.js"></script> -->
+		<!-- <script type=text/javascript src="js/compiled.sim.min.js"></script> -->
+		<script type="text/javascript" src="js/ratchet.min.js" defer></script>
+		<!-- <script type=text/javascript src="js/common.js"></script> -->
+		<!-- <script type=text/javascript src=js/common_ratchet.js></script> -->
+		
+	</body>
 </html>
