@@ -6,11 +6,8 @@ css/ratchet-theme-ios.min.css
 img/vlc-48.png
 img/vlc16x16.png
 js/ratchet.min.js
-js/vlcapp.min.js
-https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js
-https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular-touch.min.js
+js/vlc.min.js
+http://code.jquery.com/jquery-1.11.0.min.js
 
 NETWORK:
-/
-index.html
 *
