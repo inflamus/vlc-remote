@@ -1,57 +1,393 @@
 <!DOCTYPE html>
-<!-- <html manifest="appcache.manifest"> -->
-<html>
-	<head>
-		<meta charset="utf-8">
-		<title>VLC - Remote Controller</title>
+<html manifest="appcache.manifest" ng-app="VLCRemote">
+<!-- <html ng-app="VLCRemote"> -->
+<head>
+	<meta charset="utf-8">
 
-		<!-- Sets initial viewport load and disables zooming  -->
-		<meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no">
-		
-		<!-- Internet Explorer compatibility - useless ? -->
-		<meta http-equiv="X-UA-Compatible" content="IE=edge"> 
-
-		<!-- Makes your prototype chrome-less once bookmarked to your phone's home screen -->
-		<meta name="apple-mobile-web-app-capable" content="yes">
-		<meta name="apple-mobile-web-app-status-bar-style" content="white">
-
-		<!-- Include the compiled Ratchet CSS -->
-		<link href="css/ratchet.min.css" rel="stylesheet">
-		
-		<link rel="apple-touch-icon" sizes="57x57" href="img/favicons/apple-touch-icon-57x57.png">
-		<link rel="apple-touch-icon" sizes="60x60" href="img/favicons/apple-touch-icon-60x60.png">
-		<link rel="apple-touch-icon" sizes="72x72" href="img/favicons/apple-touch-icon-72x72.png">
-		<link rel="apple-touch-icon" sizes="76x76" href="img/favicons/apple-touch-icon-76x76.png">
-		<link rel="apple-touch-icon" sizes="114x114" href="img/favicons/apple-touch-icon-114x114.png">
-		<link rel="apple-touch-icon" sizes="120x120" href="img/favicons/apple-touch-icon-120x120.png">
-		<link rel="apple-touch-icon" sizes="144x144" href="img/favicons/apple-touch-icon-144x144.png">
-		<link rel="apple-touch-icon" sizes="152x152" href="img/favicons/apple-touch-icon-152x152.png">
-		<link rel="apple-touch-icon" sizes="180x180" href="img/favicons/apple-touch-icon-180x180.png">
-		<link rel="icon" type="image/png" href="img/favicons/favicon-32x32.png" sizes="32x32">
-		<link rel="icon" type="image/png" href="img/favicons/android-chrome-192x192.png" sizes="192x192">
-		<link rel="icon" type="image/png" href="img/favicons/favicon-96x96.png" sizes="96x96">
-		<link rel="icon" type="image/png" href="img/favicons/favicon-16x16.png" sizes="16x16">
-		<link rel="manifest" href="img/favicons/manifest.json">
-		<link rel="mask-icon" href="img/favicons/safari-pinned-tab.svg" color="#5bbad5">
-		<link rel="shortcut icon" href="img/favicons/favicon.ico">
-		<meta name="msapplication-TileColor" content="#da532c">
-		<meta name="msapplication-TileImage" content="img/favicons/mstile-144x144.png">
-		<meta name="msapplication-config" content="img/favicons/browserconfig.xml">
-		<meta name="theme-color" content="#ffffff">
-	</head>
-	<body>
+	<title>VLC - Remote Controller</title><!-- Sets initial viewport load and disables zooming  -->
+	<meta content="initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport"><!-- Internet Explorer compatibility - useless ? -->
+	<meta content="IE=edge" http-equiv="X-UA-Compatible"><!-- Makes your prototype chrome-less once bookmarked to your phone's home screen -->
+	<meta content="yes" name="apple-mobile-web-app-capable">
+	<meta content="white" name="apple-mobile-web-app-status-bar-style"><!-- Include the compiled Ratchet CSS -->
+	<link href="css/ratchet.min.css" rel="stylesheet">
+	<link href="img/favicons/apple-touch-icon-57x57.png" rel="apple-touch-icon" sizes="57x57">
+	<link href="img/favicons/apple-touch-icon-60x60.png" rel="apple-touch-icon" sizes="60x60">
+	<link href="img/favicons/apple-touch-icon-72x72.png" rel="apple-touch-icon" sizes="72x72">
+	<link href="img/favicons/apple-touch-icon-76x76.png" rel="apple-touch-icon" sizes="76x76">
+	<link href="img/favicons/apple-touch-icon-114x114.png" rel="apple-touch-icon" sizes="114x114">
+	<link href="img/favicons/apple-touch-icon-120x120.png" rel="apple-touch-icon" sizes="120x120">
+	<link href="img/favicons/apple-touch-icon-144x144.png" rel="apple-touch-icon" sizes="144x144">
+	<link href="img/favicons/apple-touch-icon-152x152.png" rel="apple-touch-icon" sizes="152x152">
+	<link href="img/favicons/apple-touch-icon-180x180.png" rel="apple-touch-icon" sizes="180x180">
+	<link href="img/favicons/favicon-32x32.png" rel="icon" sizes="32x32" type="image/png">
+	<link href="img/favicons/android-chrome-192x192.png" rel="icon" sizes="192x192" type="image/png">
+	<link href="img/favicons/favicon-96x96.png" rel="icon" sizes="96x96" type="image/png">
+	<link href="img/favicons/favicon-16x16.png" rel="icon" sizes="16x16" type="image/png">
+	<link href="img/favicons/manifest.json" rel="manifest">
+	<link color="#5bbad5" href="img/favicons/safari-pinned-tab.svg" rel="mask-icon">
+	<link href="img/favicons/favicon.ico" rel="shortcut icon">
+	<meta content="#da532c" name="msapplication-TileColor">
+	<meta content="img/favicons/mstile-144x144.png" name="msapplication-TileImage">
+	<meta content="img/favicons/browserconfig.xml" name="msapplication-config">
+	<meta content="#ffffff" name="theme-color">
 	
-		<noscript>This App entirely relies on Javascript + JQuery. Please enable it.</noscript>
-		<script src="//code.jquery.com/jquery-1.11.0.min.js" defer></script>
-		<!-- <script type=text/javascript src="js/jquery-1.11.0.js"></script> -->
-			<!-- Include the compiled Ratchet JS -->
-		<script type="text/javascript" src="js/vlc.js" defer></script>
-		<!-- <script type=text/javascript src="js/compiled.js"></script> -->
-		<!-- <script type=text/javascript src="js/compiled.adv.min.js"></script> -->
-		<!-- <script type=text/javascript src="js/compiled.sim.min.js"></script> -->
-		<script type="text/javascript" src="js/ratchet.min.js" defer></script>
-		<!-- <script type=text/javascript src="js/common.js"></script> -->
-		<!-- <script type=text/javascript src=js/common_ratchet.js></script> -->
-		
-	</body>
+	<!--jQuery-->
+	<!--<script defer src="//code.jquery.com/jquery-1.11.0.min.js" type="text/javascript"></script>-->
+	<!-- <script type=text/javascript src="js/jquery-1.11.0.js" defer></script> -->
+	<!--Angular-->
+	<script defer src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js" type="text/javascript"></script>
+<!-- 	<script defer src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.js" type="text/javascript"></script> -->
+<!--	<script defer src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular-touch.js" type="text/javascript"></script>-->
+	<script defer src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular-touch.min.js" type="text/javascript"></script>
+
+	<!--VLC Angular App-->
+<!-- 	<script defer src="js/vlcapp.js" type="text/javascript"></script> -->
+	<script defer src="js/vlcapp.min.js" type="text/javascript"></script>
+	<!--VLC jQuery App-->
+	<!--<script defer src="js/vlc.js" type="text/javascript"></script>-->
+	<!-- <script type="text/javascript" src="js/vlc.min.js" defer></script> -->
+	<!--Ratchet JS-->
+	<script defer src="js/ratchet.min.js" type="text/javascript"></script>
+	<!-- <script type=text/javascript src="js/ratchet.js" defer></script> -->
+
+	<style type="text/css">
+	input[type=range] {
+		-webkit-appearance: none;
+		position: relative;
+		top: 8px;
+		left: 0;
+	}
+
+	input[type=range]:focus {
+		outline: none;
+	}
+
+	input[type=range]::-webkit-slider-runnable-track {
+		width: 100%;
+		height: 8px;
+		cursor: pointer;
+		box-shadow: 1px 1px 15px #da532c,0 0 1px #de6542;
+		background: rgba(255,255,255,0.96);
+		border-radius: 5px;
+		border: 0 solid #da532c;
+	}
+
+	input[type=range]::-webkit-slider-thumb {
+		box-shadow: 1px 1px 1px #da532c,0 0 1px #de6542;
+		border: 1px solid #eee;
+		height: 16px;
+		width: 16px;
+		border-radius: 31px;
+		background: #fff;
+		cursor: pointer;
+		-webkit-appearance: none;
+		margin-top: -4px;
+	}
+
+	input[type=range]:focus::-webkit-slider-runnable-track {
+		background: rgba(255,255,255,0.96);
+	}
+
+	input[type=range]::-moz-range-track {
+		width: 100%;
+		height: 8px;
+		cursor: pointer;
+		box-shadow: 1px 1px 15px #da532c,0 0 1px #de6542;
+		background: rgba(255,255,255,0.96);
+		border-radius: 5px;
+		border: 0 solid #da532c;
+	}
+
+	input[type=range]::-moz-range-thumb {
+		box-shadow: 1px 1px 1px #da532c,0 0 1px #de6542;
+		border: 1px solid #eee;
+		height: 16px;
+		width: 16px;
+		border-radius: 31px;
+		background: #fff;
+		cursor: pointer;
+	}
+
+	input[type=range]::-ms-track {
+		width: 100%;
+		height: 8px;
+		cursor: pointer;
+		background: transparent;
+		border-color: transparent;
+		color: transparent;
+	}
+
+	input[type=range]::-ms-fill-lower {
+		background: rgba(240,240,240,0.96);
+		border: 0 solid #da532c;
+		border-radius: 10px;
+		box-shadow: 1px 1px 15px #da532c,0 0 1px #de6542;
+	}
+
+	input[type=range]::-ms-fill-upper {
+		background: rgba(255,255,255,0.96);
+		border: 0 solid #da532c;
+		border-radius: 10px;
+		box-shadow: 1px 1px 15px #da532c,0 0 1px #de6542;
+	}
+
+	input[type=range]::-ms-thumb {
+		box-shadow: 1px 1px 1px #da532c,0 0 1px #de6542;
+		border: 1px solid #eee;
+		height: 16px;
+		width: 16px;
+		border-radius: 31px;
+		background: #fff;
+		cursor: pointer;
+		height: 8px;
+	}
+
+	input[type=range]:focus::-ms-fill-lower {
+		background: rgba(255,255,255,0.96);
+	}
+
+	input[type=range]:focus::-ms-fill-upper {
+		background: rgba(255,255,255,0.96);
+	}
+
+	li.table-view-cell.media a img.media-object {
+		width: 60px;
+	}
+
+	li.table-view-cell.primary {
+		background-color: #ffe0cc;
+	}
+	
+	div.modal div.content.footer {
+		padding-bottom: 44px;
+	}
+	
+	.vhidden {
+		visibility: hidden;
+	}
+	</style>
+</head>
+
+<body ng-controller="Status as curr">
+	<noscript>This App entirely relies on Javascript (upscaled on AngularJS). Please enable it.</noscript>
+
+	<header class="bar bar-nav">
+		<h1 class="title"><img alt="VideoLan Logo" class="icon" src="img/vlc16x16.png"> VLC - Remote Controller</h1>
+		<a class="icon icon-gear pull-right" href="#settings"></a>
+	</header>
+
+<!--Settings-->
+	<div class="modal" id="settings" ng-controller="Settings as s">
+		<header class="bar bar-nav">
+			<a class="icon icon-close pull-right" href="javascript:void(0);" ng-click="closeModal('settings');"></a>
+
+			<h1 class="title"><span class="icon icon-gear"></span> Settings</h1>
+		</header>
+		<div class="content">
+			<ul class="table-view">
+				<li class="table-view-divider">VLC Location</li>
+				
+				<li class="input-row"><label>Server</label><input disabled placeholder="{{s.defaults.server}}" type="text">
+				</li>
+
+				<li class="table-view-divider">Configuration</li>
+
+				<li class="input-row"><label>Update Interval (s)</label><input ng-model="settings.update" ng-change="s.save('update', settings.update)" placeholder="{{s.defaults.update}} seconds" type="number">
+				</li>
+
+				<li class="input-row"><label>Browser</label><input placeholder="{{s.defaults.browser}}" ng-model="settings.browser" ng-change="s.save('browser', settings.browser)" type="text">
+				</li>
+
+				<li class="table-view-cell">Max Vol. 100%
+
+					<div class="toggle" ng-class="{active: settings.maxVol}">
+						<div class="toggle-handle" ng-click="s.toggle(this, 'maxVol')">
+						</div>
+					</div>
+					<p>Prevent volume from going higher than 100%</p>
+				</li>
+
+				<li class="table-view-cell">Chapters
+
+					<div class="toggle" ng-class="{active: settings.chapters}">
+						<div class="toggle-handle" ng-click="s.toggle(this, 'chapters');">
+						</div>
+					</div>
+					<p>This will first seek for the next or previous chapter within the playing file, instead of switching to the next file of the internal VLC playlist.</p>
+				</li>
+
+				<li class="input-row"><label>Forward (s)</label><input placeholder="{{s.defaults.forward}} seconds" ng-model="settings.forward" ng-change="s.save('forward', settings.forward)" type="number">
+				</li>
+
+				<li class="input-row"><label>Backward (s)</label><input placeholder="{{s.defaults.backward}} seconds" ng-model="settings.backward" ng-change="s.save('backward', settings.backward)" type="number">
+				</li>
+
+				<li class="table-view-cell">VLC Version
+					<p id="version">{{status.version || "Unknown version"}}</p>
+				</li>
+			</ul>
+		</div>
+	</div>
+
+	<div class="modal" id="info">
+		<header class="bar bar-nav">
+			<a class="icon icon-close pull-right" href="javascript:void(0);" ng-click="closeModal('info');"></a>
+			<h1 class="title"><span class="icon icon-info"></span> {{status.information.category.meta.artist && status.information.category.meta.title ? status.information.category.meta.artist +' - '+status.information.category.meta.title :
+				status.information.category.meta.title || 'Informations'}}</h1>
+		</header>
+		<div class="content">
+			<ul class="table-view">
+				<li class="table-view-divider">Meta</li>
+				
+				<li class="table-view-cell" ng-repeat="i in curr.info.infos">{{i.key}}
+					<p>{{i.val}}</p>
+				</li>
+				
+			</ul>
+		</div>
+	</div>
+
+	<div class="modal" id="streams">
+		<header class="bar bar-nav">
+			<a class="icon icon-close pull-right" href="javascript:void(0);" ng-click="closeModal('streams')"></a>
+
+			<h1 class="title"><span class="icon icon-more"></span> Streams</h1>
+		</header>
+		<div class="content">
+			<ul class="table-view">
+				<li class="table-view-cell" ng-repeat="s in curr.streams.streams" ng-if="s.Type!='Video'">
+					<span class="media-object pull-left icon" ng-class="{'icon-sound3':s.Type=='Audio', 'icon-bars':s.Type=='Subtitle'}"></span>{{s.Type || 'Unknown'}} {{s.Language}}
+					<p>
+						<span ng-if="s.Channels">{{s.Channels}} </span>
+						<span ng-if="s.Codec && s.Type!='Subtitle'">[{{s.Codec}}<span ng-if="s.Bitrate"> - {{s.Bitrate}}</span>]</span>
+					</p>
+					<p>{{s.Description}}</p>
+					<button class="btn btn-outlined btn-primary" ng-click="curr.streams.select($index)" type="button">Select</button>
+				</li>
+				<li class="table-view-cell">
+					<span class="media-object pull-left icon icon-bars"></span> Disable Subtitles
+					<button class="btn btn-outlined btn-negative" type="button" ng-click="curr.streams.select(-1)">Disable</button>
+				</li>
+			</ul>
+		</div>
+	</div>
+
+	<div class="modal" id="playlist" ng-controller="Playlist as p">
+		<header class="bar bar-nav">
+			<a class="icon icon-close pull-right" href="javascript:void(0);" ng-click="closeModal('playlist');"></a>
+
+			<h1 class="title"><span class="icon icon-list"></span> Playlists</h1>
+		</header>
+		<div class="content footer">
+			<ul class="table-view">
+ 				<li class="table-view-divider" ng-repeat-start="fold in playlist">{{fold.name}}</li> 
+ 				<li class="table-view-cell media" ng-repeat="line in fold.children" ng-class="{primary:line.current}"> 
+					<a class="navigate-right" href="javascript:void(0);" ng-click="p.Play(line.id);closeModal('playlist');">
+						<span class="badge">{{line.duration | seconds | date:'HH:mm:ss'}}</span>
+						<img class="media-object pull-left" fallback-src="img/vlc-48.png" ng-src="{{'/art?item='+line.id || 'img/vlc-48.png'}}">
+						<div class="media-body">
+							<span class="media-object pull-left icon icon-play" ng-if="line.current"></span>
+						{{line.name}}
+						</div>
+					</a>
+				</li>
+ 				<li ng-repeat-end></li> 
+			</ul>
+		</div>
+		<footer class="bar bar-footer">
+			<div class="segmented-control">
+				<a class="control-item" href="#browse" ng-click="p.Add()">Add</a>
+				<a class="control-item" href="javascript:void(0);" ng-click="p.Clear()">Clear</a>
+			</div>
+		</footer>
+	</div>
+
+	<div class="content" style="text-align:center;">
+		<div class="slider" style="background-color: rgb(255, 255, 255);">
+			<div class="slide-group">
+				<div class="slide" ng-swipe-right="curr.Swipe(false)" ng-swipe-left="curr.Swipe(true)">
+
+					<img alt="Cover" id="albumArt" fallback-src="img/vlc-48.png" ng-src="{{'/art?'+status.information.category.meta.filename || 'img/vlc-48.png'}}" style="margin: 44px auto 88px; max-width: 100%;">
+
+				</div>
+			</div>
+		</div>
+
+		<div class="error">
+		</div>
+	</div>
+
+	<nav class="bar bar-tab">
+		<a class="tab-item" href="#browse">
+			<span class="icon icon-search"></span><span class="tab-label">Open</span>
+		</a>
+		<a class="tab-item" ng-click="curr.PlayPause()" href="javascript:void(0);">
+			<span class="icon" ng-class="{'icon-pause': status.state=='playing', 'icon-play': status.state!='playing'}"></span><span class="tab-label">{{status.state=='playing' ? 'Pause' : 'Play'}}</span>
+		</a>
+		<a class="tab-item" href="javascript:void(0);" ng-click="curr.Stop()">
+			<span class="icon icon-stop"></span><span class="tab-label">Stop</span>
+		</a>
+		<a class="tab-item" ng-class="{active:status.fullscreen}" ng-click="curr.toggleFullscreen()" href="javascript:void(0);">
+			<span class="icon icon-code"></span><span class="tab-label">Fullscreen</span>
+		</a>
+		<a class="tab-item" href="javascript:void(0);" ng-click="curr.Vol(false)">
+			<span class="icon" ng-class="curr.volIcon(0)"></span><span class="tab-label">Volume -</span>
+		</a>
+		<a class="tab-item" href="javascript:void(0);" ng-click="curr.Vol(true)">
+			<span class="icon" ng-class="curr.volIcon(1)"></span><span class="tab-label">Volume +</span>
+		</a>
+	</nav>
+
+	<div class="modal" id="browse" ng-controller="Browse as b">
+		<header class="bar bar-nav">
+			<a class="icon icon-close pull-right" href="javascript:void(0);" ng-click="closeModal('browse')"></a>
+
+			<h1 class="title"><span class="icon icon-search"></span> Browse</h1>
+		</header>
+
+		<div class="content footer">
+			<ul class="table-view">
+
+				<li class="table-view-cell" ng-repeat="line in browse.element | filter:searchbrowse as results" ng-if="line.type=='dir'||(line.type=='file' && b.Ext(line.uri)!==false)">
+					<!-- Directory -->
+					<a class="navigate-left" href="javascript:void(0);" ng-if="line.name=='..'" ng-click="b.load(line.uri)" href="javascript:void(0);">
+						<span class="pull-right">Back</span>
+					</a>
+					<a class="navigate-right" href="javascript:void(0);" ng-if="line.type=='dir' && line.name !='..'" ng-click="b.load(line.uri)">{{line.name}}</a>
+					
+					<!-- Video / Audio / Subs / Playlist -->
+					<a href="javascript:void(0);" ng-if="e=b.Ext(line.uri)" ng-click="b.Play(line.uri);closeModal('browse');">
+						<span class="media-object pull-left icon" ng-class="{'icon-bars': e=='s', 'icon-play': ['v','a'].indexOf(e)>-1, 'icon-list':e=='p'}"></span>
+						{{line.name}}
+						<button class="btn btn-outlined btn-positive" ng-click="b.Queue(line.uri);$event.stopPropagation();" ng-if="e!='s'"><span class="icon icon-plus"></span> <span class="icon icon-list"></span></button>
+					</a>
+				</li>
+				<li class="table-view-cell" ng-if="results.length==0">
+					<em>No results</em>
+				</li>
+
+			</ul>
+		</div>
+
+		<footer class="bar bar-footer">
+			<input placeholder="Search" type="search" ng-model="searchbrowse" ng-click="searchbrowse = '';">
+		</footer>
+	</div>
+
+	<div class="bar bar-standard bar-header-secondary" ng-show="status.state!='stopped'">
+		<button class="btn pull-left control-item" type="button" ng-click="curr.Chapter(false)">«</button>
+		<button class="btn pull-right control-item" type="button" ng-click="curr.Chapter(true)">»</button>
+		<div class="segmented-control">
+			<a class="control-item" href="#info">Info</a>
+			<a class="control-item" href="#playlist" ng-click="loadPlaylist();">Playlist</a>
+			<a class="control-item" href="#streams">Streams</a>
+		</div>
+	</div>
+
+	<div class="bar bar-standard bar-footer-secondary" ng-class="{vhidden: status.state=='stopped'}" style="bottom: 50px;">
+		<button class="btn pull-left control-item" ng-click="curr.Seek(false)" type="button">{{curr.pos.val ||0 | seconds | date:'HH:mm:ss'}}</button>
+		<button class="btn pull-right control-item" ng-click="curr.Seek(true)" type="button">{{curr.pos.len ||0 | seconds | date:'HH:mm:ss'}}</button>
+		<input ng-disabled="status.state=='stopped'" max="1" min="0" step=".001" type="range" ng-model="curr.pos.pos">
+	</div>
+</body>
 </html>
