@@ -1,17 +1,29 @@
+// VLCapp Angular Module
+// requires angular > 1.4.x
+// @romein
+// https://github.com/inflamus/vlc-remote
+// LGPL
+
+'use strict';
 var VLCRemote = angular.module('VLCRemote', ['ngTouch'])
 	// DEBUG disabled == improve performances.
 	.config(['$compileProvider', function ($compileProvider) {
 		$compileProvider.debugInfoEnabled(false);
 	}])
+	
 	.factory('SettingsService', function(){
 		var	defaults = {
 				server: 'http://'+window.location.hostname+':'+window.location.port,
 				browser: '~',
+				dirFirst: false,
+				browseOrder: '+name',
 				update: 8,
 				maxVol: true,
 				chapters: true,
 				forward: 15,
-				backward: 15
+				backward: 15,
+				audelay: 0.1,
+				subdelay: 0.1,
 			};
 		// Main current settings object
 		var settings = {};
@@ -19,7 +31,7 @@ var VLCRemote = angular.module('VLCRemote', ['ngTouch'])
 		angular.forEach(defaults, function(v, k){
 			this.__defineGetter__(k, function()
 			{
-				l = localStorage.getItem(k);
+				var l = localStorage.getItem(k);
 				if(l === null)	return v;
 				switch(typeof v)
 				{
@@ -29,9 +41,11 @@ var VLCRemote = angular.module('VLCRemote', ['ngTouch'])
 						return l;
 					break;
 					case 'number':
-						r = parseInt(l);
-						if(r < 1) return v;
+						var r = parseFloat(l);
+						if(r%1===0 && r < 1) return v; // equivalent to isInt()
+						else if(r<0) return v;
 						return r;
+					break;
 					default: case 'string':
 						return l || v;
 					break;
@@ -52,7 +66,7 @@ var VLCRemote = angular.module('VLCRemote', ['ngTouch'])
 	.factory('VLC', ['$http', 'SettingsService', '$timeout', function($http, confs, $timeout){
 		var path = confs.settings.server;
 		//xhr functions
-			req = function(url, com){
+			var req = function(url, com){
 // 				var http =
 				return $http({
 						method: 'GET',
@@ -77,12 +91,15 @@ var VLCRemote = angular.module('VLCRemote', ['ngTouch'])
 			},
 			Playlist = function(empty)
 			{
-				if(typeof empty=='object')
-					data = empty;
-				else
-					data = empty ? {'command':'pl_empty'} : {};
-				return req(path+'/requests/playlist.json', data)
-				;
+				return req(
+					path+'/requests/playlist.json', 
+					typeof empty == 'object' ? 
+							empty : 
+							(empty ? 
+								{'command':'pl_empty'} :
+								{}
+							)
+					);
 			};
 
 		return {
@@ -102,7 +119,7 @@ var VLCRemote = angular.module('VLCRemote', ['ngTouch'])
 	
 	.controller('Headers', ['$scope', function($scope){
 		$scope.isIOs = function(){
-			return /(iPad|iPhone|iPod)/g.test(navigator.userAgent);
+			return new RegExp('(iPad|iPhone|iPod)', 'g').test(navigator.userAgent);
 		};
 	}])
 	.controller('Settings', ['$scope', 'SettingsService', function($scope, settings){
@@ -110,18 +127,27 @@ var VLCRemote = angular.module('VLCRemote', ['ngTouch'])
 		$scope.settings = settings.settings;
 		this.defaults = settings.defaults;
 	// Binding toggles	
-		toggles = document.querySelector('div#settings').getElementsByClassName('toggle');
-		for(i=0; i< toggles.length; i++)
+		var toggles = document.querySelector('div#settings').getElementsByClassName('toggle');
+		for(var i=0; i<toggles.length; i++)
 			toggles[i].addEventListener('toggle', function(e){
-				el = angular.element(e.target);
+				var el = angular.element(e.target);
 				$scope.settings[el.attr('id')] = el.hasClass('active');
 			});
+		this.browseOrderOpts = [
+			{id:'+name', value:'↓ Filename'},
+			{id:'-name', value:'↑ Filename'},
+			{id:'+modification_time', value:'↓ Last Modified'},
+			{id:'-modification_time', value:'↑ Last Modified'},
+			{id:'+creation_time', value:'↓ Creation date'},
+			{id:'-creation_time', value:'↑ Creation date'},
+			{id:'+access_time', value:'↓ Last accessed'},
+			{id:'-access_time', value:'↑ Last accessed'}
+		];
 	}])
 	.controller('Playlist', ['$scope', 'VLC', function($scope, VLC){
 		this.load = function(empty){
 			return $scope.loadPlaylist(empty);
 		};
-// 		this.load();
 		this.Add = function(){
 			reloadPlaylist = 1;
 		};
@@ -150,6 +176,7 @@ var VLCRemote = angular.module('VLCRemote', ['ngTouch'])
 				$scope.browse = r.data;
 			});
 		};
+		$scope.ordering = function(e){return e.name=='..' ? 0 : 1;};
 		this.load('file://'+confs.settings.browser);
 		this.Play = function(uri){
 			if(this.Ext(uri)=='s')
@@ -165,7 +192,7 @@ var VLCRemote = angular.module('VLCRemote', ['ngTouch'])
 				$scope.sendCommand({'command':'in_enqueue', 'input':uri});
 		};
 		this.Ext = function(filename){
-			ext = filename.substr(filename.lastIndexOf('.') + 1).toLowerCase();
+			var ext = filename.substr(filename.lastIndexOf('.') + 1).toLowerCase();
 			if(video_types.indexOf(ext) > -1)
 				return 'v';
 			if(audio_types.indexOf(ext) > -1)
@@ -183,7 +210,7 @@ var VLCRemote = angular.module('VLCRemote', ['ngTouch'])
 		};
 	}])
 	.controller('Status', ['$scope', 'VLC', 'SettingsService', '$filter', '$interval', function($scope, VLC, confs, $filter, $interval){
-		that = this;
+		var that = this;
 		// Populate the scope
 		$scope.status = {};
 		$scope.error = false;
@@ -204,7 +231,6 @@ var VLCRemote = angular.module('VLCRemote', ['ngTouch'])
 		{
 			document.getElementById(id).classList.remove('active');
 		};
-		//TODO : then error => handle ajax error
 		this.toggleFullscreen = function(){
 			$scope.sendCommand('fullscreen');
 		};
@@ -251,7 +277,7 @@ var VLCRemote = angular.module('VLCRemote', ['ngTouch'])
 		//Slider and duration infos
 			// bind width  of input range with window size
 		this.sliderSize = function(){
-			w = window.innerWidth 
+			var w = window.innerWidth 
 				- 46 
 				- document.querySelector('.bar-footer-secondary .btn.control-item.pull-left').clientWidth
 				- document.querySelector('.bar-footer-secondary .btn.control-item.pull-right').clientWidth;
@@ -274,7 +300,7 @@ var VLCRemote = angular.module('VLCRemote', ['ngTouch'])
 				$scope.status.position = parseFloat(v);
 				// Setting a timeout in order to send only one ajax request when range seeking is done
 				if(this.timeout)	clearTimeout(this.timeout);
-				t = this;
+				var t = this;
 				this.timeout = setTimeout(function(){
 					that.Seek(t.val);
 				}, 100);
@@ -298,8 +324,8 @@ var VLCRemote = angular.module('VLCRemote', ['ngTouch'])
 		
 		//Chapters seeker
 		this.Chapter = function(t){
-			chaps = $scope.status.information.chapters;
-			currchap = $scope.status.information.chapter;
+			var chaps = $scope.status.information.chapters;
+			var currchap = $scope.status.information.chapter;
 			if(chaps.length > 1 && confs.settings.chapters)
 			{
 				if(t)
@@ -352,7 +378,7 @@ var VLCRemote = angular.module('VLCRemote', ['ngTouch'])
 			},
 			buildArr: function()
 			{
-				arr = $scope.status;
+				var arr = $scope.status;
 				if(!arr.information) return false;
 				arr = arr.information.category.meta;
 				var ret = [];
@@ -404,14 +430,14 @@ var VLCRemote = angular.module('VLCRemote', ['ngTouch'])
 		this.streams = {
 			buildArr: function(){
 // 				console.log('Buildstreams fired');
-				arr = $scope.status;
-				if(!arr.information) return false;
+				var arr = $scope.status;
+				if(!arr.information) { return false };
 				arr = arr.information.category;
-				i =0;
-				subs = false;
-				this.streams=[];
-				while(c=arr['Stream '+i])
+				var i = 0, subs = false;
+				this.streams = [];
+				while(arr.hasOwnProperty('Stream '+i))
 				{
+					var c = arr['Stream '+i];
 					if(c.Type=='Subtitle')
 						subs = true;
 					this.streams[i++] = c;
@@ -427,6 +453,16 @@ var VLCRemote = angular.module('VLCRemote', ['ngTouch'])
 					'val':id});
 // 				$scope.closeModal('streams');
 			}
+		};
+		
+		this.Delay = function(s, t)
+		{
+			var val = t=='a' ? $scope.status.audiodelay : $scope.status.subtitledelay;
+			var del = t=='a' ? confs.settings.audelay : confs.settings.subdelay;
+			$scope.sendCommand({
+				'command': t=='a' ? 'audiodelay' : 'subdelay',
+				'val': Math.round((val += s ? del : del*-1)*1000)/1000
+			});
 		};
 		
 		// Playlist 
