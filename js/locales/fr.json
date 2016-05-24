@@ -1,0 +1,108 @@
+{
+  "MAIN": {
+    "CONN_LOST": "La connexion \u00e0 VLC a \u00e9t\u00e9 perdue.",
+    "RECONNECTING": "Reconnexion..."
+  },
+  "BOTTOMBAR": {
+    "OPEN": "Ouvrir",
+    "PLAY": "Lecture",
+    "PAUSE": "Pause",
+    "STOP": "Stop",
+    "VOLUME-": "Volume -",
+    "VOLUME+": "Volume +",
+    "FULLSCREEN": "Plein \u00e9cran"
+  },
+  "BROWSE": {
+    "TITLE": "Ouvrir",
+    "NO_RESULTS": "Aucun r\u00e9sultats...",
+    "BACK": "Pr\u00e9c\u00e9dent",
+    "SEARCH": "Rechercher"
+  },
+  "PLAYLIST": {
+    "TITLE": "Liste de lecture",
+    "ADD": "Ajouter",
+    "CLEAR": "Vider"
+  },
+  "STREAMS": {
+    "TITLE": "Streams",
+    "TRACKS": "Tracks",
+    "SELECT": "S\u00e9lect.",
+    "DISABLE_SUBS": "Aucun sous-titres",
+    "DISABLE": "S\u00e9lect.",
+    "SYNCHRO": "Synchronisation",
+    "AUDIO_DELAY": "D\u00e9lai audio",
+    "SUB_DELAY": "D\u00e9lai sous-titres",
+    "DELAY": "Retarder",
+    "STRETCH": "Avancer",
+    "SEC": "sec"
+  },
+  "HEADER2": {
+    "INFO": "Info",
+    "PLAYLIST": "Liste de lecture",
+    "STREAMS": "Streams"
+  },
+  "SETTINGS": {
+    "TITLE": "Configurations",
+    "VLCAPP": "Serveur VLC - R\u00e9seau",
+    "SERVER": "H\u00f4te",
+    "UPDATE_INTERVAL": "Actualisation (sec)",
+    "BROWSER": "Ouverture de fichiers",
+    "DEFAULT_PATH": "Chemin par d\u00e9faut",
+    "FOLDERS_FIRST": "Dossiers en premier",
+    "FOLDERS_FIRST_HELP": "Ceci affichera les dossiers en haut de liste, avant les fichiers.",
+    "ORDERING_BY": "Trier par",
+    "M": {
+      "+NAME": "\u2193 Nom",
+      "-NAME": "\u2191 Nom",
+      "+MODIFICATION_TIME": "\u2193 Date",
+      "-MODIFICATION_TIME": "\u2191 Date",
+      "+CREATION_TIME": "\u2193 Date de cr\u00e9ation",
+      "-CREATION_TIME": "\u2191 Date de cr\u00e9ation",
+      "+ACCESS_TIME": "\u2193 Derni\u00e8re ouverture",
+      "-ACCESS_TIME": "\u2191 Derni\u00e8re ouverture"
+    },
+    "PLAYER": "Player",
+    "MAX_VOL": "Max Vol. 100%",
+    "MAX_VOL_HELP": "Emp\u00eache le volume d'aller plus haut que 100%",
+    "CHAPTERS": "Chapitres",
+    "CHAPTERS_HELP": "Ceci cherchera le chapitre suivant ou pr\u00e9c\u00e9dent d'un fichier lorsqu'il(s) existe(nt), au lieu de jouer l'item suivant de la playlist VLC.",
+    "FORWARD": "Avancer (s)",
+    "BACKWARD": "Rembobiner (s)",
+    "TRACKS_SYNC": "Synchronisation des Flux",
+    "TRACKS_HELP1": "Ceci d\u00e9finit la valeur par d\u00e9faut en secondes des boutons de resynchronisation.",
+    "TRACKS_HELP2": "NB : cette fonction est disponible dans la fen\u00eatre \"Stream\" (en lecture).",
+    "AUDIO_DELAY": "D\u00e9lai audio (s)",
+    "SUB_DELAY": "D\u00e9lai sous-titres (s)",
+    "MISC": "Autres",
+    "VLC_VERSION": "VLC Version"
+  },
+  "INFO": {
+    "TITLE": "Informations",
+    "META": "Tags",
+    "M": {
+      "CONTENT_TYPE": "Type",
+      "title": "Titre",
+      "artist": "Artiste",
+      "album": "Album",
+      "genre": "Genre",
+      "description": "Synopsis",
+      "SEASON_SYNOPSIS": "Synopsis de la saison",
+      "SUMMARY": "Synopsis de la s\u00e9rie",
+      "date": "Date de sortie",
+      "ACTOR": "Acteurs",
+      "CHARACTER": "Personnages",
+      "GUESTS": "Invit\u00e9s",
+      "DIRECTOR": "R\u00e9alisateur",
+      "PRODUCER": "Producteur",
+      "WRITTEN_BY": "\u00c9crit par",
+      "EXECUTIVE_PRODUCER": "Produteur(s) Executif(s)",
+      "DIRECTOR_OF_PHOTOGRAPHY": "Directeur de la Photographie",
+      "SOUND_ENGINEER": "Ing\u00e9nieur(s) du Son",
+      "PRODUCTION_STUDIO": "Studio de Production",
+      "PRODUCTION_DESIGNER": "Production Designer",
+      "RECORDING_LOCATION": "Lieu d'Enregistrement",
+      "Film": "Film",
+      "TV Show": "S\u00e9rie"
+    }
+  }
+}
