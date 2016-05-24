@@ -24,8 +24,8 @@
     "CLEAR": "Vider"
   },
   "STREAMS": {
-    "TITLE": "Streams",
-    "TRACKS": "Tracks",
+    "TITLE": "Pistes",
+    "TRACKS": "Pistes",
     "SELECT": "S\u00e9lect.",
     "DISABLE_SUBS": "Aucun sous-titres",
     "DISABLE": "S\u00e9lect.",
@@ -39,7 +39,7 @@
   "HEADER2": {
     "INFO": "Info",
     "PLAYLIST": "Liste de lecture",
-    "STREAMS": "Streams"
+    "STREAMS": "Pistes"
   },
   "SETTINGS": {
     "TITLE": "Configurations",
@@ -61,7 +61,7 @@
       "+ACCESS_TIME": "\u2193 Derni\u00e8re ouverture",
       "-ACCESS_TIME": "\u2191 Derni\u00e8re ouverture"
     },
-    "PLAYER": "Player",
+    "PLAYER": "Lecture",
     "MAX_VOL": "Max Vol. 100%",
     "MAX_VOL_HELP": "Emp\u00eache le volume d'aller plus haut que 100%",
     "CHAPTERS": "Chapitres",
