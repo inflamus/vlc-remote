@@ -38,10 +38,12 @@ SCREENSHOTS
 -----------
 
 (with french locale)
+
 ![Screenshot 1](https://cdn.img42.com/599437258cafff8b2ba3de58ca2661b0.png)  ![Screenshot 2](https://cdn.img42.com/f0675817a624d2e1c918f22373be7ce6.png) 
 ![Screenshot 3](https://cdn.img42.com/a788706e2ff7597d9e2a2aa623cb04dd.png)  ![Screenshot 4](https://cdn.img42.com/7821748bf0bad418f5ac50727b1cb4b9.png)  
 ![Screenshot 5](https://cdn.img42.com/38c8fad330b06d9810f815ae4f0977c8.png)  ![Screenshot 6](https://cdn.img42.com/e5e734837ebf9f51248e4514137950d7.png)  
 ![Screenshot 7](https://cdn.img42.com/af5462b943bd250f3f72442c201c4cfe.png)
+
 TODO
 ----
  * Equalizer
