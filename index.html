@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html manifest="appcache.manifest" ng-app="VLCRemote">
+<html manifest="appcache.manifest" ng-app="VLCRemote" ng-strict-di>
 <head ng-controller="Headers">
 	<meta charset="utf-8">
 
@@ -41,28 +41,18 @@
 	<meta content="img/favicons/browserconfig.xml" name="msapplication-config">
 	<meta content="#ffffff" name="theme-color">
 	
-	<!--jQuery-->
-	<!-- <script defer src="//code.jquery.com/jquery-1.11.0.min.js" type="text/javascript"></script> -->
-	<!-- <script type=text/javascript src="js/jquery-1.11.0.js" defer></script> -->
 	<!--Angular-->
-	<!-- <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js" type="text/javascript"></script> -->
-	<!-- 	<script defer src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.js" type="text/javascript"></script> -->
-	<script src="js/angular.min.js" type="text/javascript">/*modified angular 1.4.8 code, so VLC's lua http server can provide it.*/</script>
-	<!-- <script defer src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular-touch.js" type="text/javascript"></script>-->
-	<!-- <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular-touch.min.js" type="text/javascript"></script> -->
+	<script type="text/javascript" src="js/angular.min.js">/*modified angular 1.4.8 code, so VLC's lua http server can provide it.*/</script>
 	<script type="text/javascript" src="js/angular-touch.min.js"></script>
-	<!-- <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular-route.min.js" type="text/javascript"></script> -->
-
+	<script type="text/javascript" src="js/angular-translate.min.js"></script>
+	<script type="text/javascript" src="js/angular-translate-loader-static-files.min.js"></script>
+	
 	<!--VLC Angular App-->
-	<!-- <script src="js/vlcapp.js" type="text/javascript"></script> -->
 	<script defer src="js/vlcapp.min.js" type="text/javascript"></script>
-	<!--VLC jQuery App-->
-	<!--<script defer src="js/vlc.js" type="text/javascript"></script>-->
-	<!-- <script type="text/javascript" src="js/vlc.min.js" defer></script> -->
+
 	<!--Ratchet JS-->
 	<script defer src="js/ratchet.min.js" type="text/javascript"></script>
-	<!-- <script type=text/javascript src="js/ratchet.js" defer></script> -->
-	
+
 	<style type="text/css">
 	input[type=range] {
 		-webkit-appearance: none;
@@ -189,7 +179,7 @@
 </head>
 
 <body ng-controller="Status as curr">
-	<noscript>This App entirely relies on Javascript (upscaled on AngularJS). Please enable it.</noscript>
+	<noscript>This App entirely relies on Javascript (using AngularJS v1.4.8). Please enable it.</noscript>
 
 	<header class="bar bar-nav">
 		<h1 class="title"><img alt="VideoLan Logo" class="icon" src="img/vlc16x16.png"> VLC - Remote Controller</h1>
@@ -201,82 +191,82 @@
 		<header class="bar bar-nav">
 			<a class="icon icon-close pull-right" href="javascript:void(0);" ng-click="closeModal('settings');"></a>
 
-			<h1 class="title"><span class="icon icon-gear"></span> Settings</h1>
+			<h1 class="title"><span class="icon icon-gear"></span> {{'SETTINGS.TITLE' | translate}}</h1>
 		</header>
 		<div class="content">
 			<ul class="table-view">
-				<li class="table-view-divider">VLC Location - App behaviour</li>
+				<li class="table-view-divider">{{'SETTINGS.VLCAPP' | translate}}</li>
 				
 				<li class="input-row">
-					<label>Server</label>
+					<label>{{'SETTINGS.SERVER' | translate}}</label>
 					<input disabled placeholder="{{s.defaults.server}}" type="text">
 				</li>
 
 				<li class="input-row">
-					<label>Update Interval (s)</label>
+					<label>{{'SETTINGS.UPDATE_INTERVAL' | translate}}</label>
 					<input ng-model="settings.update" min="1" max="300" step="1"  placeholder="{{s.defaults.update}} seconds" type="number">
 				</li>
 
-				<li class="table-view-divider">Browser</li>
+				<li class="table-view-divider">{{'SETTINGS.BROWSER' | translate}}</li>
 
 				<li class="input-row">
-					<label>Default path</label>
+					<label>{{'SETTINGS.DEFAULT_PATH' | translate}}</label>
 					<input placeholder="{{s.defaults.browser}}" ng-model="settings.browser" type="text">
 				</li>
 				
 				<li class="table-view-cell">
-					<label>Folders First</label>
-					<p>Put directories ahead in browser window.</p>
+					<label>{{'SETTINGS.FOLDERS_FIRST' | translate}}</label>
+					<p>{{'SETTINGS.FOLDERS_FIRST_HELP' | translate}}</p>
 					<div class="toggle" id="dirFirst" ng-class="{active: settings.dirFirst}">
 						<div class="toggle-handle"></div>
 					</div>
 				</li>
 				
 				<li class="input-row">
-					<label>Ordering by</label>
+					<label>{{'SETTINGS.ORDERING_BY' | translate}}</label>
 					<select ng-model="settings.browseOrder">
-						<option ng-repeat="option in s.browseOrderOpts" value="{{option.id}}">{{option.value}}</option>
+						<option ng-repeat="option in s.browseOrderOpts" value="{{option.id}}">{{'SETTINGS.M.'+option.value | translate}}</option>
 					</select>
 				</li>
 
-				<li class="table-view-divider">Player</li>
+				<li class="table-view-divider">{{'SETTINGS.PLAYER' | translate}}</li>
 				
-				<li class="table-view-cell">Max Vol. 100%
+				<li class="table-view-cell">{{'SETTINGS.MAX_VOL' | translate}}
 					<div class="toggle" id="maxVol" ng-class="{active: settings.maxVol}">
 						<div class="toggle-handle">
 						</div>
 					</div>
-					<p>Prevent volume from going higher than 100%</p>
+					<p>{{'SETTINGS.MAX_VOL_HELP' | translate}}</p>
 				</li>
 
-				<li class="table-view-cell">Chapters
+				<li class="table-view-cell">{{'SETTINGS.CHAPTERS' | translate}}
 
 					<div class="toggle" id="chapters" ng-class="{active: settings.chapters}">
 						<div class="toggle-handle">
 						</div>
 					</div>
-					<p>This will first seek for the next or previous chapter within the playing file, instead of switching to the next file of the internal VLC playlist.</p>
+					<p>{{'SETTINGS.CHAPTERS_HELP' | translate}}</p>
 				</li>
 
-				<li class="input-row"><label>Forward (s)</label><input placeholder="{{s.defaults.forward}} seconds" ng-model="settings.forward" min="1" step="1" max="500" type="number">
+				<li class="input-row"><label>{{'SETTINGS.FORWARD' | translate}}</label><input placeholder="{{s.defaults.forward}} seconds" ng-model="settings.forward" min="1" step="1" max="500" type="number">
 				</li>
 
-				<li class="input-row"><label>Backward (s)</label><input placeholder="{{s.defaults.backward}} seconds" ng-model="settings.backward" min="1" step="1" max="500" type="number">
+				<li class="input-row"><label>{{'SETTINGS.BACKWARD' | translate}}</label><input placeholder="{{s.defaults.backward}} seconds" ng-model="settings.backward" min="1" step="1" max="500" type="number">
 				</li>
 				
-				<li class="table-view-divider">Tracks synchronisation</li>
+				<li class="table-view-divider">{{'SETTINGS.TRACKS_SYNC' | translate}}</li>
 				
 				<li class="table-view-cell">
-					<p>This sets the default interval of the delay +/- button.</p>
-					<p>Tip : resync tracks on the fly is located in the "Stream" dialog (while playing).</p>
-				<li class="input-row"><label>Audio Delay (s)</label><input placeholder="{{s.defaults.audelay}} seconds" ng-model="settings.audelay" min="0.05" step="0.05" max="50" type="number">
+					<p>{{'SETTINGS.TRACKS_HELP1' | translate}}</p>
+					<p>{{'SETTINGS.TRACKS_HELP2' | translate}}</p>
+				<li class="input-row"><label>{{'SETTINGS.AUDIO_DELAY' | translate}}</label><input placeholder="{{s.defaults.audelay}} seconds" ng-model="settings.audelay" min="0.05" step="0.05" max="50" type="number">
 				</li>
 
-				<li class="input-row"><label>Subtitles Delay (s)</label><input placeholder="{{s.defaults.subdelay}} seconds" ng-model="settings.subdelay" min="0.05" step="0.05" max="50" type="number">
+				<li class="input-row"><label>{{'SETTINGS.SUB_DELAY' | translate}}</label><input placeholder="{{s.defaults.subdelay}} seconds" ng-model="settings.subdelay" min="0.05" step="0.05" max="50" type="number">
 				</li>
 
-				<li class="table-view-divider">Miscellanious</li>
-				<li class="table-view-cell">VLC Version
+				<li class="table-view-divider">{{'SETTINGS.MISC' | translate}}</li>
+				<li class="table-view-cell">{{'SETTINGS.VLC_VERSION' | translate}}
 					<p id="version">{{status.version || "Unknown version"}}</p>
 					<p>API version {{status.apiversion}}</p>
 				</li>
@@ -289,13 +279,13 @@
 		<header class="bar bar-nav">
 			<a class="icon icon-close pull-right" href="javascript:void(0);" ng-click="closeModal('info');"></a>
 			<h1 class="title"><span class="icon icon-info"></span> {{status.information.category.meta.artist && status.information.category.meta.title ? status.information.category.meta.artist +' - '+status.information.category.meta.title :
-				status.information.category.meta.title || 'Informations'}}</h1>
+				status.information.category.meta.title || 'INFO.TITLE' | translate}}</h1>
 		</header>
 		<div class="content">
 			<ul class="table-view">
-				<li class="table-view-divider">Meta</li>
+				<li class="table-view-divider">{{'INFO.META' | translate}}</li>
 				
-				<li class="table-view-cell" ng-repeat="i in curr.info.infos">{{i.key}}
+				<li class="table-view-cell" ng-repeat="i in curr.info.infos">{{'INFO.M.'+i.key | translate}}
 					<p>{{i.val}}</p>
 				</li>
 				
@@ -308,11 +298,11 @@
 		<header class="bar bar-nav">
 			<a class="icon icon-close pull-right" href="javascript:void(0);" ng-click="closeModal('streams')"></a>
 
-			<h1 class="title"><span class="icon icon-more"></span> Streams</h1>
+			<h1 class="title"><span class="icon icon-more"></span> {{'STREAMS.TITLE' | translate}}</h1>
 		</header>
 		<div class="content">
 			<ul class="table-view">
-				<li class="table-view-divider">Tracks</li>
+				<li class="table-view-divider">{{'STREAMS.TRACKS' | translate}}</li>
 				<li class="table-view-cell" ng-repeat="s in curr.streams.streams" ng-if="s.Type!='Video'" ng-swipe-right="curr.streams.select($index)">
 					<a href="javascript:void(0);" ng-click="curr.streams.select($index);closeModal('streams');">
 						<span class="media-object pull-left icon" ng-class="{'icon-sound3':s.Type=='Audio', 'icon-bars':s.Type=='Subtitle'}"></span>{{s.Type || 'Unknown'}} {{s.Language}}
@@ -321,45 +311,45 @@
 							<span ng-if="s.Codec && s.Type!='Subtitle'">[{{s.Codec}}<span ng-if="s.Bitrate"> - {{s.Bitrate}}</span>]</span>
 						</p>
 						<p>{{s.Description}}</p>
-						<button class="btn btn-outlined btn-primary" ng-click="curr.streams.select($index);$event.stopPropagation();" type="button">Select</button>
+						<button class="btn btn-outlined btn-primary" ng-click="curr.streams.select($index);$event.stopPropagation();" type="button">{{'STREAMS.SELECT' | translate}}</button>
 					</a>
 				</li>
 				<li class="table-view-cell">
 					<a href="javascript:void(0);" ng-click="curr.streams.select(-1);closeModal('streams');">
-						<span class="media-object pull-left icon icon-bars"></span> Disable Subtitles
-						<button class="btn btn-outlined btn-negative" type="button" ng-click="curr.streams.select(-1);$event.stopPropagation();">Disable</button>
+						<span class="media-object pull-left icon icon-bars"></span> {{'STREAMS.DISABLE_SUBS' | translate}}
+						<button class="btn btn-outlined btn-negative" type="button" ng-click="curr.streams.select(-1);$event.stopPropagation();">{{'STREAMS.DISABLE' | translate}}</button>
 					</a>
 				</li>
-				<li class="table-view-divider">Synchronisation</li>
+				<li class="table-view-divider">{{'STREAMS.SYNCHRO' | translate}}</li>
 				<li class="table-view-cell">
 					<span class="media-object pull-left icon icon-sound3"></span>
-					Audio Delay ({{status.audiodelay}} secs)
+					{{'STREAMS.AUDIO_DELAY' | translate}} ({{status.audiodelay}} secs)
 					<ul>
 						<li class="table-view-cell">
 							<span class="media-object pull-left icon icon-forward"></span>
-							Delay
-							<button class="btn" ng-click="curr.Delay(true, 'a');">+{{confs.audelay}} sec</button>
+							{{'STREAMS.DELAY' | translate}}
+							<button class="btn" ng-click="curr.Delay(true, 'a');">+{{confs.audelay}} {{'STREAMS.SEC' | translate}}</button>
 						</li>
 						<li class="table-view-cell">
 							<span class="media-object pull-left icon icon-back"></span>
-							Stretch
-							<button class="btn" ng-click="curr.Delay(false,'a');">-{{confs.audelay}} sec</button>
+							{{'STREAMS.STRETCH' | translate}}
+							<button class="btn" ng-click="curr.Delay(false,'a');">-{{confs.audelay}} {{'STREAMS.SEC' | translate}}</button>
 						</li>
 					</ul>
 				</li>
 				<li class="table-view-cell">
 					<span class="media-object pull-left icon icon-bars"></span>
-					Subtitles Delay ({{status.subtitledelay}} secs)
+					{{'STREAMS.SUB_DELAY' | translate}} ({{status.subtitledelay}} secs)
 					<ul>
 						<li class="table-view-cell">
 							<span class="media-object pull-left icon icon-forward"></span>
-							Delay
-							<button class="btn" ng-click="curr.Delay(true, 's');">+{{confs.subdelay}} sec</button>
+							{{'STREAMS.DELAY' | translate}}
+							<button class="btn" ng-click="curr.Delay(true, 's');">+{{confs.subdelay}} {{'STREAMS.SEC' | translate}}</button>
 						</li>
 						<li class="table-view-cell">
 							<span class="media-object pull-left icon icon-back"></span>
-							Stretch
-							<button class="btn" ng-click="curr.Delay(false,'s');">-{{confs.subdelay}} sec</button>
+							{{'STREAMS.STRETCH' | translate}}
+							<button class="btn" ng-click="curr.Delay(false,'s');">-{{confs.subdelay}} {{'STREAMS.SEC' | translate}}</button>
 						</li>
 					</ul>
 				</li>
@@ -372,7 +362,7 @@
 		<header class="bar bar-nav">
 			<a class="icon icon-close pull-right" href="javascript:void(0);" ng-click="closeModal('playlist');"></a>
 
-			<h1 class="title"><span class="icon icon-list"></span> Playlists</h1>
+			<h1 class="title"><span class="icon icon-list"></span> {{'PLAYLIST.TITLE' | translate}}</h1>
 		</header>
 		<div class="content footer">
 			<ul class="table-view">
@@ -392,8 +382,8 @@
 		</div>
 		<footer class="bar bar-footer">
 			<div class="segmented-control">
-				<a class="control-item" href="#browse" ng-click="p.Add()">Add</a>
-				<a class="control-item" href="javascript:void(0);" ng-click="p.Clear()">Clear</a>
+				<a class="control-item" href="#browse" ng-click="p.Add()">{{'PLAYLIST.ADD' | translate}}</a>
+				<a class="control-item" href="javascript:void(0);" ng-click="p.Clear()">{{'PLAYLIST.CLEAR' | translate}}</a>
 			</div>
 		</footer>
 	</div>
@@ -411,31 +401,31 @@
 		</div>
 
 		<div class="error" ng-show="error!==false">
-			<p>VLC Connection has been lost.</p>
+			<p>{{'MAIN.CONN_LOST' | translate}}</p>
 <!-- 			<p>{{error |json}}</p> -->
-			<button class="btn btn-negative">Reconnecting...</button>
+			<button class="btn btn-negative">{{'MAIN.RECONNECTING' | translate}}</button>
 		</div>
 	</div>
 
 <!--Bottom controls bar-->
 	<nav class="bar bar-tab">
 		<a class="tab-item" href="#browse">
-			<span class="icon icon-search"></span><span class="tab-label">Open</span>
+			<span class="icon icon-search"></span><span class="tab-label">{{'BOTTOMBAR.OPEN' | translate}}</span>
 		</a>
 		<a class="tab-item" ng-click="curr.PlayPause()" href="javascript:void(0);">
-			<span class="icon" ng-class="{'icon-pause': status.state=='playing', 'icon-play': status.state!='playing'}"></span><span class="tab-label">{{status.state=='playing' ? 'Pause' : 'Play'}}</span>
+			<span class="icon" ng-class="{'icon-pause': status.state=='playing', 'icon-play': status.state!='playing'}"></span><span class="tab-label">{{status.state=='playing' ? 'BOTTOMBAR.PAUSE' : 'BOTTOMBAR.PLAY' | translate}}</span>
 		</a>
 		<a class="tab-item" href="javascript:void(0);" ng-click="curr.Stop()">
-			<span class="icon icon-stop"></span><span class="tab-label">Stop</span>
+			<span class="icon icon-stop"></span><span class="tab-label">{{'BOTTOMBAR.STOP' | translate}}</span>
 		</a>
 		<a class="tab-item" ng-class="{active:status.fullscreen}" ng-click="curr.toggleFullscreen()" href="javascript:void(0);">
-			<span class="icon icon-code"></span><span class="tab-label">Fullscreen</span>
+			<span class="icon icon-code"></span><span class="tab-label">{{'BOTTOMBAR.FULLSCREEN' | translate}}</span>
 		</a>
 		<a class="tab-item" href="javascript:void(0);" ng-click="curr.Vol(false)">
-			<span class="icon" ng-class="curr.volIcon(0)"></span><span class="tab-label">Volume -</span>
+			<span class="icon" ng-class="curr.volIcon(0)"></span><span class="tab-label">{{'BOTTOMBAR.VOLUME-' | translate}}</span>
 		</a>
 		<a class="tab-item" href="javascript:void(0);" ng-click="curr.Vol(true)">
-			<span class="icon" ng-class="curr.volIcon(1)"></span><span class="tab-label">Volume +</span>
+			<span class="icon" ng-class="curr.volIcon(1)"></span><span class="tab-label">{{'BOTTOMBAR.VOLUME+' | translate}}</span>
 		</a>
 	</nav>
 
@@ -444,7 +434,7 @@
 		<header class="bar bar-nav">
 			<a class="icon icon-close pull-right" href="javascript:void(0);" ng-click="closeModal('browse')"></a>
 
-			<h1 class="title"><span class="icon icon-search"></span> Browse</h1>
+			<h1 class="title"><span class="icon icon-search"></span> {{'BROWSE.TITLE' | translate}}</h1>
 		</header>
 
 		<div class="content footer">
@@ -453,7 +443,7 @@
 				<li class="table-view-cell" ng-repeat="line in browse.element | filter:b.search | orderBy:[ordering, confs.dirFirst?'type':null, confs.browseOrder] as results" ng-if="line.type=='dir'||(line.type=='file' && b.Ext(line.uri)!==false)" ng-swipe-left="b.load(b.back);">
 					<!-- Directory -->
 					<a class="navigate-left" href="javascript:void(0);" ng-if="line.name=='..'" ng-init="b.back=line.uri" ng-click="b.load(line.uri)" href="javascript:void(0);">
-						<span class="pull-right">Back</span>
+						<span class="pull-right">{{'BROWSE.BACK' | translate}}</span>
 					</a>
 					<a class="navigate-right" href="javascript:void(0);" ng-if="line.type=='dir' && line.name !='..'" ng-swipe-right="b.load(line.uri)" ng-click="b.load(line.uri)">{{line.name}}</a>
 					
@@ -465,14 +455,14 @@
 					</a>
 				</li>
 				<li class="table-view-cell" ng-if="results.length==0">
-					<em>No results</em>
+					<em>{{'BROWSE.NO_RESULTS' | translate}}</em>
 				</li>
 
 			</ul>
 		</div>
 
 		<footer class="bar bar-footer">
-			<input placeholder="Search" type="search" ng-model="b.search" ng-focus="b.searchClick();">
+			<input placeholder="{{'BROWSE.SEARCH' | translate}}" type="search" ng-model="b.search" ng-focus="b.searchClick();">
 		</footer>
 	</div>
 
@@ -485,9 +475,9 @@
 			<span class="icon" ng-class="(status.information.chapters.length>1 && (status.information.chapters.length-status.information.chapter>1) && confs.chapters) ? 'icon-forward' : 'icon-right';"></span>
 		</button>
 		<div class="segmented-control">
-			<a class="control-item" href="#info">Info</a>
-			<a class="control-item" href="#playlist" ng-click="loadPlaylist();">Playlist</a>
-			<a class="control-item" href="#streams">Streams</a>
+			<a class="control-item" href="#info">{{'HEADER2.INFO' | translate}}</a>
+			<a class="control-item" href="#playlist" ng-click="loadPlaylist();">{{'HEADER2.PLAYLIST' | translate}}</a>
+			<a class="control-item" href="#streams">{{'HEADER2.STREAMS' | translate}}</a>
 		</div>
 	</div>
 
@@ -495,7 +485,8 @@
 	<div class="bar bar-standard bar-footer-secondary" ng-class="{vhidden: status.state=='stopped'}" style="bottom: 50px;">
 		<button class="btn pull-left control-item" ng-click="curr.Seek(false)" type="button">{{curr.pos.val ||0 | seconds | date:'HH:mm:ss'}}</button>
 		<button class="btn pull-right control-item" ng-click="curr.Seek(true)" type="button">{{curr.pos.len ||0 | seconds | date:'HH:mm:ss'}}</button>
-		<input ng-disabled="status.state=='stopped'" max="1" min="0" step=".001" type="range" ng-model="curr.pos.pos">
+		<input ng-disabled="status.state=='stopped'" max="1" min="0" step=".001" type="range" ng-model="curr.pos.pos" ng-style="sliderSize()" resize>
 	</div>
+
 </body>
 </html>
