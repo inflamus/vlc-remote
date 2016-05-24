@@ -45,6 +45,7 @@
         modal.classList.toggle('active');
       }
       event.preventDefault(); // prevents rewriting url (apps can still use hash values in url)
+      history.pushState(modal.id, '', ''); // Make history button html5 compatible;
     }
   };
   

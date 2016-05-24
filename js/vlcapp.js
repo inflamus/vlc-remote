@@ -4,16 +4,161 @@
 // https://github.com/inflamus/vlc-remote
 // LGPL
 
+// ==ClosureCompiler==
+// @compilation_level SIMPLE_OPTIMIZATIONS
+// @output_file_name vlcapp.min.js
+// @externs_url https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.js
+// @externs_url https://cdnjs.cloudflare.com/ajax/libs/angular-translate/2.6.1/angular-translate.js
+// @externs_url https://cdnjs.cloudflare.com/ajax/libs/angular-translate-loader-static-files/2.6.1/angular-translate-loader-static-files.js
+// ==/ClosureCompiler==
+
+
+(function(window,angular){
 'use strict';
-var VLCRemote = angular.module('VLCRemote', ['ngTouch'])
+var VLCRemote = angular.module('VLCRemote', ['ngTouch', 'pascalprecht.translate'])
 	// DEBUG disabled == improve performances.
 	.config(['$compileProvider', function ($compileProvider) {
 		$compileProvider.debugInfoEnabled(false);
 	}])
 	
-	.factory('SettingsService', function(){
+	// Multi-Language support
+	.config(['$locationProvider', function ($locationProvider) {
+		$locationProvider.html5Mode({
+			enabled: true,
+			requireBase: false
+		});
+	}])
+	.config(['$translateProvider', function ($translateProvider) {
+		$translateProvider
+			.useStaticFilesLoader({
+				'prefix': 'js/locales/',
+				'suffix': '.json'
+			})
+			.registerAvailableLanguageKeys(['af', 'am', 'ar', 'as', 'az', 'ba', 'be', 'bg', 'bn', 'bo', 'br', 'bs', 'ca', 'co', 'cs', 'cy', 'da', 'de', 'ds', 'dv', 'el', 'en', 'es', 'et', 'eu', 'fa', 'fi', 'fo', 'fr', 'fy', 'ga', 'gd', 'gl', 'gs', 'gu', 'ha', 'he', 'hi', 'hr', 'hs', 'hu', 'hy', 'id', 'ig', 'ii', 'is', 'it', 'iu', 'ja', 'ka', 'kk', 'kl', 'km', 'kn', 'ko', 'ky', 'lb', 'lo', 'lt', 'lv', 'mi', 'mk', 'ml', 'mn', 'mo', 'mr', 'ms', 'mt', 'nb', 'ne', 'nl', 'nn', 'ns', 'oc', 'or', 'pa', 'pl', 'pr', 'ps', 'pt', 'qu', 'rm', 'ro', 'ru', 'rw', 'sa', 'se', 'si', 'sk', 'sl', 'sm', 'sq', 'sr', 'sv', 'sw', 'sy', 'ta', 'te', 'tg', 'th', 'tk', 'tn', 'tr', 'tt', 'tz', 'ug', 'uk', 'ur', 'uz', 'vi', 'wo', 'xh', 'yo', 'zh', 'zu'], {
+				'af_*': 'af',
+				'am_*': 'am',
+				'ar_*': 'ar',
+				'as_*': 'as',
+				'az_*': 'az',
+				'ba_*': 'ba',
+				'be_*': 'be',
+				'bg_*': 'bg',
+				'bn_*': 'bn',
+				'bo_*': 'bo',
+				'br_*': 'br',
+				'bs_*': 'bs',
+				'ca_*': 'ca',
+				'co_*': 'co',
+				'cs_*': 'cs',
+				'cy_*': 'cy',
+				'da_*': 'da',
+				'de_*': 'de',
+				'ds_*': 'ds',
+				'dv_*': 'dv',
+				'el_*': 'el',
+				'en_*': 'en',
+				'es_*': 'es',
+				'et_*': 'et',
+				'eu_*': 'eu',
+				'fa_*': 'fa',
+				'fi_*': 'fi',
+				'fo_*': 'fo',
+				'fr_*': 'fr',
+				'fy_*': 'fy',
+				'ga_*': 'ga',
+				'gd_*': 'gd',
+				'gl_*': 'gl',
+				'gs_*': 'gs',
+				'gu_*': 'gu',
+				'ha_*': 'ha',
+				'he_*': 'he',
+				'hi_*': 'hi',
+				'hr_*': 'hr',
+				'hs_*': 'hs',
+				'hu_*': 'hu',
+				'hy_*': 'hy',
+				'id_*': 'id',
+				'ig_*': 'ig',
+				'ii_*': 'ii',
+				'is_*': 'is',
+				'it_*': 'it',
+				'iu_*': 'iu',
+				'ja_*': 'ja',
+				'ka_*': 'ka',
+				'kk_*': 'kk',
+				'kl_*': 'kl',
+				'km_*': 'km',
+				'kn_*': 'kn',
+				'ko_*': 'ko',
+				'ky_*': 'ky',
+				'lb_*': 'lb',
+				'lo_*': 'lo',
+				'lt_*': 'lt',
+				'lv_*': 'lv',
+				'mi_*': 'mi',
+				'mk_*': 'mk',
+				'ml_*': 'ml',
+				'mn_*': 'mn',
+				'mo_*': 'mo',
+				'mr_*': 'mr',
+				'ms_*': 'ms',
+				'mt_*': 'mt',
+				'nb_*': 'nb',
+				'ne_*': 'ne',
+				'nl_*': 'nl',
+				'nn_*': 'nn',
+				'ns_*': 'ns',
+				'oc_*': 'oc',
+				'or_*': 'or',
+				'pa_*': 'pa',
+				'pl_*': 'pl',
+				'pr_*': 'pr',
+				'ps_*': 'ps',
+				'pt_*': 'pt',
+				'qu_*': 'qu',
+				'rm_*': 'rm',
+				'ro_*': 'ro',
+				'ru_*': 'ru',
+				'rw_*': 'rw',
+				'sa_*': 'sa',
+				'se_*': 'se',
+				'si_*': 'si',
+				'sk_*': 'sk',
+				'sl_*': 'sl',
+				'sm_*': 'sm',
+				'sq_*': 'sq',
+				'sr_*': 'sr',
+				'sv_*': 'sv',
+				'sw_*': 'sw',
+				'sy_*': 'sy',
+				'ta_*': 'ta',
+				'te_*': 'te',
+				'tg_*': 'tg',
+				'th_*': 'th',
+				'tk_*': 'tk',
+				'tn_*': 'tn',
+				'tr_*': 'tr',
+				'tt_*': 'tt',
+				'tz_*': 'tz',
+				'ug_*': 'ug',
+				'uk_*': 'uk',
+				'ur_*': 'ur',
+				'uz_*': 'uz',
+				'vi_*': 'vi',
+				'wo_*': 'wo',
+				'xh_*': 'xh',
+				'yo_*': 'yo',
+				'zh_*': 'zh',
+				'zu_*': 'zu'
+			})
+			.determinePreferredLanguage()
+			.fallbackLanguage('en')
+		;
+	}])
+	
+	.factory('SettingsService', ['$location', function($location){
 		var	defaults = {
-				server: 'http://'+window.location.hostname+':'+window.location.port,
+				server: 'http://'+$location.host()+':'+$location.port(),
 				browser: '~',
 				dirFirst: false,
 				browseOrder: '+name',
@@ -62,7 +207,7 @@ var VLCRemote = angular.module('VLCRemote', ['ngTouch'])
 			defaults: defaults,
 			settings: settings
 		};
-	})
+	}])
 	.factory('VLC', ['$http', 'SettingsService', '$timeout', function($http, confs, $timeout){
 		var path = confs.settings.server;
 		//xhr functions
@@ -122,26 +267,26 @@ var VLCRemote = angular.module('VLCRemote', ['ngTouch'])
 			return new RegExp('(iPad|iPhone|iPod)', 'g').test(navigator.userAgent);
 		};
 	}])
-	.controller('Settings', ['$scope', 'SettingsService', function($scope, settings){
+	.controller('Settings', ['$scope', 'SettingsService', '$window', function($scope, settings, $window){
 	// Get settings generated from service;
 		$scope.settings = settings.settings;
 		this.defaults = settings.defaults;
 	// Binding toggles	
-		var toggles = document.querySelector('div#settings').getElementsByClassName('toggle');
+		var toggles = $window.document.querySelector('div#settings').getElementsByClassName('toggle');
 		for(var i=0; i<toggles.length; i++)
 			toggles[i].addEventListener('toggle', function(e){
 				var el = angular.element(e.target);
 				$scope.settings[el.attr('id')] = el.hasClass('active');
 			});
 		this.browseOrderOpts = [
-			{id:'+name', value:'↓ Filename'},
-			{id:'-name', value:'↑ Filename'},
-			{id:'+modification_time', value:'↓ Last Modified'},
-			{id:'-modification_time', value:'↑ Last Modified'},
-			{id:'+creation_time', value:'↓ Creation date'},
-			{id:'-creation_time', value:'↑ Creation date'},
-			{id:'+access_time', value:'↓ Last accessed'},
-			{id:'-access_time', value:'↑ Last accessed'}
+			{id:'+name', value:'+NAME'},
+			{id:'-name', value:'-NAME'},
+			{id:'+modification_time', value:'+MODIFICATION_TIME'},
+			{id:'-modification_time', value:'-MODIFICATION_TIME'},
+			{id:'+creation_time', value:'+CREATION_TIME'},
+			{id:'-creation_time', value:'-CREATION_TIME'},
+			{id:'+access_time', value:'+ACCESS_TIME'},
+			{id:'-access_time', value:'-ACCESS_TIME'}
 		];
 	}])
 	.controller('Playlist', ['$scope', 'VLC', function($scope, VLC){
@@ -209,7 +354,7 @@ var VLCRemote = angular.module('VLCRemote', ['ngTouch'])
 				this.search = '';
 		};
 	}])
-	.controller('Status', ['$scope', 'VLC', 'SettingsService', '$filter', '$interval', function($scope, VLC, confs, $filter, $interval){
+	.controller('Status', ['$scope', 'VLC', 'SettingsService', '$filter', '$interval', '$location', '$window', function($scope, VLC, confs, $filter, $interval, $location, $window){
 		var that = this;
 		// Populate the scope
 		$scope.status = {};
@@ -224,13 +369,27 @@ var VLCRemote = angular.module('VLCRemote', ['ngTouch'])
 			});
 		};
 		$scope.sendCommand({});
+		
+		//Updating
 		this.updateInterval = $interval($scope.sendCommand, confs.settings.update*1000, 0, true, {});
-// 		$scope.data = VLC.data;
-// 		this.data = VLC.data;
+		
+		//Modals handling using history.pushstate.
 		$scope.closeModal = function(id)
 		{
-			document.getElementById(id).classList.remove('active');
+			var d = id===undefined ? $window.document.querySelector('.modal.active') : $window.document.getElementById(id);
+			if(d != null)
+			{
+				d.classList.remove('active');
+	// 			$location.hash("");
+				if(id!==undefined) $window.history.back();
+			}
 		};
+		angular.element($window).on('popstate', function(e){
+			$scope.closeModal();
+			if(e.state != null)
+				$window.document.getElementById(e.state).classList.add('active');
+		});
+		
 		this.toggleFullscreen = function(){
 			$scope.sendCommand('fullscreen');
 		};
@@ -273,22 +432,7 @@ var VLCRemote = angular.module('VLCRemote', ['ngTouch'])
 						: $scope.status.volume -26 
 				});
 		};
-		
-		//Slider and duration infos
-			// bind width  of input range with window size
-		this.sliderSize = function(){
-			var w = window.innerWidth 
-				- 46 
-				- document.querySelector('.bar-footer-secondary .btn.control-item.pull-left').clientWidth
-				- document.querySelector('.bar-footer-secondary .btn.control-item.pull-right').clientWidth;
-			angular.element(document.querySelector('.bar-footer-secondary input[type=range]')).css('width', w+'px');
-		};
-		angular.element(window).on('resize', function(){
-			that.sliderSize();
-		});
-		angular.element(document).ready(function(){
-			that.sliderSize();
-		});
+		//Slider
 		var pos = function()
 		{
 			this.timeout = null;
@@ -349,45 +493,46 @@ var VLCRemote = angular.module('VLCRemote', ['ngTouch'])
 		
 		//Information modal
 		this.info = {
-			keys: {
-// 				'DATE_TAGGED': 			'Tagged',
-				'CONTENT_TYPE':			'Type',
-// 				'ENCODER':				'Encoder',
-// 				'LANGUAGE':				'Language',
-				'title':				'Title',
-// 				'ORIGINAL_TITLE':		'Original Title',
-				'artist':				'Artist',
-				'album':				'Album',
-				'genre':				'Genre',
-				'description':			'Synopsis',
-				'SEASON_SYNOPSIS':		'Season\'s Plot',
-				'SUMMARY':				'Show\'s Plot', // only for TV Shows
-				'date':					'Release Date',
-				'ACTOR':				'Actors',
-				'CHARACTER':			'Characters',
-				'GUESTS':				'Guests',
-				'DIRECTOR':				'Director',
-				'PRODUCER':				'Producer',
-				'WRITTEN_BY':			'Written by',
-				'EXECUTIVE_PRODUCER':	'Executive Producer(s)',
-				'DIRECTOR_OF_PHOTOGRAPHY':'Director of Photography',
-				'SOUND_ENGINEER':		'Sound Engineers',
-				'PRODUCTION_DESIGNER':	'Production Designer',
-				'PRODUCTION_STUDIO':	'Production Studio',
-				'RECORDING_LOCATION':	'Recording Location',
-			},
+// 			keys: {
+// // 				'DATE_TAGGED': 			'Tagged',
+// 				'CONTENT_TYPE':			'INFO.M.Type',
+// // 				'ENCODER':				'Encoder',
+// // 				'LANGUAGE':				'Language',
+// 				'title':				'INFO.M.Title',
+// // 				'ORIGINAL_TITLE':		'Original Title',
+// 				'artist':				'INFO.M.Artist',
+// 				'album':				'INFO.M.Album',
+// 				'genre':				'INFO.M.Genre',
+// 				'description':			'INFO.M.Synopsis',
+// 				'SEASON_SYNOPSIS':		'INFO.M.Season_Plot',
+// 				'SUMMARY':				'INFO.M.Show_Plot', // only for TV Shows
+// 				'date':					'Release Date',
+// 				'ACTOR':				'Actors',
+// 				'CHARACTER':			'Characters',
+// 				'GUESTS':				'Guests',
+// 				'DIRECTOR':				'Director',
+// 				'PRODUCER':				'Producer',
+// 				'WRITTEN_BY':			'Written by',
+// 				'EXECUTIVE_PRODUCER':	'Executive Producer(s)',
+// 				'DIRECTOR_OF_PHOTOGRAPHY':'Director of Photography',
+// 				'SOUND_ENGINEER':		'Sound Engineers',
+// 				'PRODUCTION_DESIGNER':	'Production Designer',
+// 				'PRODUCTION_STUDIO':	'Production Studio',
+// 				'RECORDING_LOCATION':	'Recording Location',
+// 			},
+			keys:['CONTENT_TYPE','title','artist','album','genre','description','SEASON_SYNOPSIS','SUMMARY','date','ACTOR','CHARACTER','GUESTS','DIRECTOR','PRODUCER','WRITTEN_BY','EXECUTIVE_PRODUCER','DIRECTOR_OF_PHOTOGRAPHY','SOUND_ENGINEER','PRODUCTION_DESIGNER','PRODUCTION_STUDIO','RECORDING_LOCATION'],
 			buildArr: function()
 			{
 				var arr = $scope.status;
 				if(!arr.information) return false;
 				arr = arr.information.category.meta;
 				var ret = [];
-				angular.forEach(this.keys, function(inti, key){
+				angular.forEach(this.keys, function(key, id){
 					if(!arr[key])	return;
 					if(key=='CONTENT_TYPE')
 						if(arr['genre'])
 							return ret.push({
-								'key':arr[key],
+								'key':arr[key], // Film
 								'val':arr['genre']
 							});
 					if(key=='album' && (arr['CONTENT_TYPE']=='TV Show' || arr['CONTENT_TYPE']=='Film'))	return;
@@ -396,21 +541,21 @@ var VLCRemote = angular.module('VLCRemote', ['ngTouch'])
 						if(arr['track_number'])
 							if(arr['track_total'])
 								return ret.push({
-									'key':inti,
+									'key':key,
 									'val':'['+arr['track_number']+'/'+arr['track_total']+'] '+arr[key]
 								});
 							else
 								return ret.push({
-									'key':inti,
+									'key':key,
 									'val':arr['track_number']+'. '+arr[key]
 								});
 					if(key=='date')
 						return ret.push({
-							'key':inti,
+							'key':key,
 							'val':$filter('date')(arr[key], 'longDate'),
 						});
 					return ret.push({
-						'key':inti,
+						'key':key,
 						'val':arr[key]
 					});
 				});
@@ -433,15 +578,23 @@ var VLCRemote = angular.module('VLCRemote', ['ngTouch'])
 				var arr = $scope.status;
 				if(!arr.information) { return false };
 				arr = arr.information.category;
-				var i = 0, subs = false;
 				this.streams = [];
-				while(arr.hasOwnProperty('Stream '+i))
+				angular.forEach(arr, function(v, k)
 				{
-					var c = arr['Stream '+i];
-					if(c.Type=='Subtitle')
-						subs = true;
-					this.streams[i++] = c;
-				}
+					var match = k.match(/[0-9]+$/);
+					if(match != null)
+						this.streams[parseInt(match)] = v;
+					//TODO interface it without locale
+					return true;
+				}, this);
+// 				var i = 0;
+// 				while(arr.hasOwnProperty('Stream '+i))
+// 				{
+// 					var c = arr['Stream '+i];
+// 					if(c.Type=='Subtitle')
+// 						subs = true;
+// 					this.streams[i++] = c;
+// 				}
 			},
 			streams: [],
 			select: function(id)
@@ -471,10 +624,31 @@ var VLCRemote = angular.module('VLCRemote', ['ngTouch'])
 				$scope.playlist = r.data.children;
 			});
 		};
-// 		this.loadPlaylist = function(){console.log('fired');$scope.loadPlaylist()};
 		
 	}])
 	
+	.directive('resize', ['$window', function($window){
+		// Resizing slider element on each
+		return function(scope, element, attr) {
+			var l = $window.document.querySelector('.bar-footer-secondary .btn.control-item.pull-left');
+			var r = $window.document.querySelector('.bar-footer-secondary .btn.control-item.pull-right');
+			scope.$watch(function(){
+				return {
+					w: $window.innerWidth,
+					l: l.clientWidth,
+					r: r.clientWidth
+				}
+			}, function(newV, oldV){
+				scope.sliderSize = function(){
+					return {
+						'width': (newV.w - 46 - newV.r - newV.l) +'px'
+					}
+				};
+			}, true);
+			angular.element($window).on('resize', function(){scope.$apply();});
+			angular.element($window.document).ready(function(){scope.$apply();});
+		}
+	}])
 	.directive('fallbackSrc', function () {
 		var fallbackSrc = {
 			link: function postLink(scope, iElement, iAttrs) {
@@ -485,21 +659,6 @@ var VLCRemote = angular.module('VLCRemote', ['ngTouch'])
 		}
 		return fallbackSrc;
 	})
-/*	
-	.run(['$rootScope', '$location', function($rootScope, $location){
-		$rootScope.$on('$locationChangeSuccess', function() {
-			$rootScope.actualLocation = $location.path();
-		});        
-		
-		$rootScope.$watch(function () {return $location.path()}, function (newLocation, oldLocation) {
-			if($rootScope.actualLocation === newLocation) {
-				d = document.querySelector('.modal.active');
-				console.log(d);
-				if(d)
-					d.classList.remove('.active');
-			}
-		});
-	}])*/
 ;
 
 var reloadPlaylist = 0;
@@ -509,3 +668,4 @@ var
 	audio_types = ["3ga", "a52", "aac", "ac3", "ape", "awb", "dts", "flac", "it", "m4a", "m4p", "mka", "mlp", "mod", "mp1", "mp2", "mp3", "oga", "ogg", "oma", "s3m", "spx", "thd", "tta", "wav", "wma", "wv", "xm"],
 	playlist_types = ["asx", "b4s", "cue", "ifo", "m3u", "m3u8", "pls", "ram", "rar", "sdp", "vlc", "xspf"],
 	subtitle_types = ['srt', 'idx', 'ass', 'ssa', 'sup'];
+})(window,angular);

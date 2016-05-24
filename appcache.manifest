@@ -6,13 +6,13 @@ css/ratchet-theme-ios.min.css
 img/vlc-48.png
 img/vlc16x16.png
 js/ratchet.min.js
-#js/vlcapp.min.js #escaping, preventing update-conflicts
+# js/vlcapp.min.js
 js/angular.min.js
 js/angular-touch.min.js
-# https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js
-# https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular-touch.min.js
+js/angular-translate.min.js
+js/angular-translate-loader-static-files.min.js
 
 NETWORK:
 /
-index.html
+angular.html
 *

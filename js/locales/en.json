@@ -1,0 +1,108 @@
+{
+  "MAIN": {
+    "CONN_LOST": "VLC Connection has been lost.",
+    "RECONNECTING": "Reconnecting..."
+  },
+  "BOTTOMBAR": {
+    "OPEN": "Open",
+    "PLAY": "Play",
+    "PAUSE": "Pause",
+    "STOP": "Stop",
+    "VOLUME-": "Volume -",
+    "VOLUME+": "Volume +",
+    "FULLSCREEN": "Fullscreen"
+  },
+  "BROWSE": {
+    "TITLE": "Browse",
+    "NO_RESULTS": "No results...",
+    "BACK": "Back",
+    "SEARCH": "Search"
+  },
+  "PLAYLIST": {
+    "TITLE": "Playlist",
+    "ADD": "Add",
+    "CLEAR": "Clear"
+  },
+  "STREAMS": {
+    "TITLE": "Streams",
+    "TRACKS": "Tracks",
+    "SELECT": "Select",
+    "DISABLE_SUBS": "Disable subtitles",
+    "DISABLE": "Disable",
+    "SYNCHRO": "Synchronisation",
+    "AUDIO_DELAY": "Audio Delay",
+    "SUB_DELAY": "Subtitles Delay",
+    "DELAY": "Delay",
+    "STRETCH": "Stretch",
+    "SEC": "sec"
+  },
+  "HEADER2": {
+    "INFO": "Info",
+    "PLAYLIST": "Playlist",
+    "STREAMS": "Streams"
+  },
+  "SETTINGS": {
+    "TITLE": "Settings",
+    "VLCAPP": "VLC Location - App Behaviour",
+    "SERVER": "Server",
+    "UPDATE_INTERVAL": "Update Interval (s)",
+    "BROWSER": "Browser",
+    "DEFAULT_PATH": "Default path",
+    "FOLDERS_FIRST": "Folders First",
+    "FOLDERS_FIRST_HELP": "Put directories ahead in browser window.",
+    "ORDERING_BY": "Ordering by",
+    "M": {
+      "+NAME": "\u2193 Filename",
+      "-NAME": "\u2191 Filename",
+      "+MODIFICATION_TIME": "\u2193 Last Modified",
+      "-MODIFICATION_TIME": "\u2191 Last Modified",
+      "+CREATION_TIME": "\u2193 Creation date",
+      "-CREATION_TIME": "\u2191 Creation date",
+      "+ACCESS_TIME": "\u2193 Last accessed",
+      "-ACCESS_TIME": "\u2191 Last accessed"
+    },
+    "PLAYER": "Player",
+    "MAX_VOL": "Max Vol. 100%",
+    "MAX_VOL_HELP": "Prevent volume from going higher than 100%",
+    "CHAPTERS": "Chapters",
+    "CHAPTERS_HELP": "This will first seek for the next or previous chapter within the playing file, instead of switching to the next file of the internal VLC playlist.",
+    "FORWARD": "Forward (s)",
+    "BACKWARD": "Backward (s)",
+    "TRACKS_SYNC": "Tracks synchronisation",
+    "TRACKS_HELP1": "This sets the default interval of the delay +\/- button.",
+    "TRACKS_HELP2": "Tip : resync tracks on the fly is located in the \"Stream\" dialog (while playing).",
+    "AUDIO_DELAY": "Audio Delay (s)",
+    "SUB_DELAY": "Subtitles Delay (s)",
+    "MISC": "Miscellanious",
+    "VLC_VERSION": "VLC Version"
+  },
+  "INFO": {
+    "TITLE": "Informations",
+    "META": "Meta",
+    "M": {
+      "CONTENT_TYPE": "Type",
+      "title": "Title",
+      "artist": "Artist",
+      "album": "Album",
+      "genre": "Genre",
+      "description": "Synopsis",
+      "SEASON_SYNOPSIS": "Season's Plot",
+      "SUMMARY": "Show's Plot",
+      "date": "Release Date",
+      "ACTOR": "Actors",
+      "CHARACTER": "Characters",
+      "GUESTS": "Guests",
+      "DIRECTOR": "Director",
+      "PRODUCER": "Producer",
+      "WRITTEN_BY": "Written By",
+      "EXECUTIVE_PRODUCER": "Executive Producer(s)",
+      "DIRECTOR_OF_PHOTOGRAPHY": "Director of Photography",
+      "SOUND_ENGINEER": "Sound Engineers",
+      "PRODUCTION_STUDIO": "Production Studio",
+      "PRODUCTION_DESIGNER": "Production Designer",
+      "RECORDING_LOCATION": "Recording Location",
+      "Film": "Film",
+      "TV Show": "TV Show"
+    }
+  }
+}
