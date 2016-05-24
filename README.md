@@ -44,8 +44,19 @@ SCREENSHOTS
 ![Screenshot 5](https://cdn.img42.com/38c8fad330b06d9810f815ae4f0977c8.png)  ![Screenshot 6](https://cdn.img42.com/e5e734837ebf9f51248e4514137950d7.png)  
 ![Screenshot 7](https://cdn.img42.com/af5462b943bd250f3f72442c201c4cfe.png)
 
+Write a locale
+----
+ * Clone the latest
+ * Create a new file in js/locales/[ln].json, where ln is the language code, as en, fr, de, es, it, ru etc...
+ * Copy and Paste the content of "en.json" file.
+ * Fill, replace and translate entries.
+ * When done, git commit and request a new pull. Name it angular-translate-[ln] with your locale.
+ * It will be merged to the main branch later after checkup.
+
 TODO
 ----
+ * Multi-lang support for Streams.
+ * Write more locales
  * Equalizer
  * Rewrite history.pushback using clean directives
  * Streaming live from VLC support ?
