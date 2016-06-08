@@ -16,10 +16,13 @@
     "TITLE": "Browse",
     "NO_RESULTS": "No results...",
     "BACK": "Back",
-    "SEARCH": "Search"
+    "SEARCH": "Search or MRL"
   },
   "PLAYLIST": {
     "TITLE": "Playlist",
+    "RANDOM": "Shuffle",
+    "REPEAT": "Repeat",
+    "LOOP": "Loop",
     "ADD": "Add",
     "CLEAR": "Clear"
   },
@@ -30,11 +33,19 @@
     "DISABLE_SUBS": "Disable subtitles",
     "DISABLE": "Disable",
     "SYNCHRO": "Synchronisation",
+    "PLAYBACK_RATE": "Playback rate",
+    "HASTEN": "Hasten",
+    "SLOW_DOWN": "Slow down",
     "AUDIO_DELAY": "Audio Delay",
     "SUB_DELAY": "Subtitles Delay",
     "DELAY": "Delay",
     "STRETCH": "Stretch",
-    "SEC": "sec"
+    "SEC": "sec",
+    "EQUALIZER": "Equalizer",
+    "ENABLE_EQ": "Enable Equalizer",
+    "PREAMP": "Pre-Amp.",
+    "PRESETS": "Presets",
+    "EQ": "Parametric Equalizer"
   },
   "HEADER2": {
     "INFO": "Info",
@@ -48,6 +59,7 @@
     "UPDATE_INTERVAL": "Update Interval (s)",
     "BROWSER": "Browser",
     "DEFAULT_PATH": "Default path",
+    "PATH_HELP": "Tip ! You can set your default path by swiping your finger right on a directory line.",
     "FOLDERS_FIRST": "Folders First",
     "FOLDERS_FIRST_HELP": "Put directories ahead in browser window.",
     "ORDERING_BY": "Ordering by",
@@ -104,5 +116,5 @@
       "Film": "Film",
       "TV Show": "TV Show"
     }
-  }
+  }  
 }

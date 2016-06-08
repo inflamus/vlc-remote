@@ -13,7 +13,7 @@
 // ==/ClosureCompiler==
 
 
-(function(window,angular){
+(function(angular){
 'use strict';
 var VLCRemote = angular.module('VLCRemote', ['ngTouch', 'pascalprecht.translate'])
 	// DEBUG disabled == improve performances.
@@ -254,19 +254,23 @@ var VLCRemote = angular.module('VLCRemote', ['ngTouch', 'pascalprecht.translate'
 		};
 	}])
 	
-	.filter('seconds', [function() {
+	.filter('seconds', function() {
 		return function(seconds) {
 			return new Date(1970, 0, 1).setSeconds(seconds);
 		};
-	}])
+	})
+	.filter('bytes', function() {
+		return function(bytes, precision) {
+			if (isNaN(parseFloat(bytes)) || !isFinite(bytes)) return '-';
+			if (typeof precision === 'undefined') precision = 1;
+			var units = ['bytes', 'kB', 'MB', 'GB', 'TB', 'PB'],
+				number = Math.floor(Math.log(bytes) / Math.log(1024));
+			return (bytes / Math.pow(1024, Math.floor(number))).toFixed(precision) +  ' ' + units[number];
+		}
+	})
 
 	.run(['VLC', function(VLC) {}])
 	
-	.controller('Headers', ['$scope', function($scope){
-		$scope.isIOs = function(){
-			return new RegExp('(iPad|iPhone|iPod)', 'g').test(navigator.userAgent);
-		};
-	}])
 	.controller('Settings', ['$scope', 'SettingsService', '$window', function($scope, settings, $window){
 	// Get settings generated from service;
 		$scope.settings = settings.settings;
@@ -314,15 +318,21 @@ var VLCRemote = angular.module('VLCRemote', ['ngTouch', 'pascalprecht.translate'
 		this.Delete = function(id){
 			this.load({'command':'pl_delete', 'id':id});
 		};
+		this.Pl = function(l){
+			$scope.sendCommand('pl_'+l);
+		};
+	// PL_sort is not working on requests/*.json
+		
 	}])
-	.controller('Browse', ['$scope', 'VLC', 'SettingsService', function($scope, VLC, confs){
+	.controller('Browse', ['$scope', 'VLC', 'SettingsService', '$window', function($scope, VLC, confs, $window){
 		this.load = function(dir) {
 			VLC.Browse(dir).then(function(r){
 				$scope.browse = r.data;
 			});
 		};
 		$scope.ordering = function(e){return e.name=='..' ? 0 : 1;};
-		this.load('file://'+confs.settings.browser);
+		$scope.nullOrd = function(){return 1;};
+		this.load('file://'+$window.encodeURIComponent(confs.settings.browser));
 		this.Play = function(uri){
 			if(this.Ext(uri)=='s')
 				return $scope.sendCommand({'command':'addsubtitle','val':uri});
@@ -353,6 +363,14 @@ var VLCRemote = angular.module('VLCRemote', ['ngTouch', 'pascalprecht.translate'
 			if(this.search != '')
 				this.search = '';
 		};
+		this.isMRL = function(){
+			return /:\/\//.test(this.search);
+		};
+		this.setDefault = function(path){
+// 			dir = dir.replace(/file:\/\//, '');
+			if(confirm("Would you like to make this directory the default one ?\n\n"+path))
+				confs.settings.browser = path;
+		};
 	}])
 	.controller('Status', ['$scope', 'VLC', 'SettingsService', '$filter', '$interval', '$location', '$window', function($scope, VLC, confs, $filter, $interval, $location, $window){
 		var that = this;
@@ -370,25 +388,30 @@ var VLCRemote = angular.module('VLCRemote', ['ngTouch', 'pascalprecht.translate'
 		};
 		$scope.sendCommand({});
 		
-		//Updating
-		this.updateInterval = $interval($scope.sendCommand, confs.settings.update*1000, 0, true, {});
+		//Updating interval : paused when switching tab, resumed when focused.
+		$scope.focused = true; // put a grayscale layer if not focused, and so not updating.
+		var uInterval;
+		var buildInterval = function(){
+			if(angular.isDefined(uInterval))	return false;
+			uInterval = $interval($scope.sendCommand, confs.settings.update*1000, 0, true, {});
+		};
+		$window.addEventListener('blur', function(){
+			$interval.cancel(uInterval);
+			uInterval = undefined;
+			$scope.focused = false;
+		});
+		$window.addEventListener('focus', function(){
+			$scope.sendCommand({});
+			buildInterval();
+			$scope.focused = true;
+		});
+		buildInterval(); // Lauch interval
 		
-		//Modals handling using history.pushstate.
+		//Modals handling
 		$scope.closeModal = function(id)
 		{
-			var d = id===undefined ? $window.document.querySelector('.modal.active') : $window.document.getElementById(id);
-			if(d != null)
-			{
-				d.classList.remove('active');
-	// 			$location.hash("");
-				if(id!==undefined) $window.history.back();
-			}
+			$window.document.getElementById(id).classList.remove('active');
 		};
-		angular.element($window).on('popstate', function(e){
-			$scope.closeModal();
-			if(e.state != null)
-				$window.document.getElementById(e.state).classList.add('active');
-		});
 		
 		this.toggleFullscreen = function(){
 			$scope.sendCommand('fullscreen');
@@ -436,21 +459,15 @@ var VLCRemote = angular.module('VLCRemote', ['ngTouch', 'pascalprecht.translate'
 		var pos = function()
 		{
 			this.timeout = null;
-			this.__defineGetter__('pos', function(){
+			this.pos = function(v){
+				if(arguments.length){
+					$scope.status.position = parseFloat(v);
+					that.Seek(this.val);
+				}
 				return $scope.status.position;
-			});
-			this.__defineSetter__('pos', function(v){
-				//bind var
-				$scope.status.position = parseFloat(v);
-				// Setting a timeout in order to send only one ajax request when range seeking is done
-				if(this.timeout)	clearTimeout(this.timeout);
-				var t = this;
-				this.timeout = setTimeout(function(){
-					that.Seek(t.val);
-				}, 100);
-			});
+			};
 			this.__defineGetter__('val', function(){
-				return Math.round(this.pos * this.len);
+				return Math.round(this.pos() * this.len);
 			});
 // 			this.__defineSetter__('val', function(v){});
 			this.__defineGetter__('len', function(){
@@ -579,37 +596,73 @@ var VLCRemote = angular.module('VLCRemote', ['ngTouch', 'pascalprecht.translate'
 				if(!arr.information) { return false };
 				arr = arr.information.category;
 				this.streams = [];
+				
+				//TODO : Add translations:
+				// for every line, the first value is the reference. add next to it some of the locale-keys of status.information{...} object
+				// Done : enUS, frFR, esES, itIT, portuguese, deDE, polish
+				this.keyTranslations = [
+					['T', 'Type', 'Type_', 'Typ', 'Tipo'],
+					['C', 'Codec', 'Codec_', 'Códec', 'Codifica', 'Kodek'],
+					['L', 'Language', 'Langue_', 'Sprache', 'Idioma', 'Lingua', 'Taal', 'Linguagem', 'Wybór_języka'],
+					['Ch', 'Channels', 'Canaux_', 'Canales', 'Kanäle', 'Canali', 'Kanalen', 'Canais', 'Kanały'],
+					['B', 'Bitrate', 'Tasa_de_bits', 'Przepływność'],
+				];
+				this.TypeTranslations = [
+					['V', 'Video', 'Vidéo', 'Vídeo', 'Obraz'],
+					['A', 'Audio', 'Audio', 'Áudio', 'Dźwięk'],
+					['S', 'Subtitle', 'Sous-titres', 'Subtítulo', 'Untertitel', 'Sottotitolo', 'Ondertitel', 'Legenda', 'Napisy'],
+				];
+				this.findTranslation = function(d){
+					var keys = this.keyTranslations;
+					var Types = this.TypeTranslations;
+					angular.forEach(d, function(val, key){
+						for(var i=0; i<keys.length; i++){
+							if(keys[i].indexOf(key) == -1)
+								continue;// abort if the key exists as it
+							if(keys[i][0]=='T')
+								for(var j=0; j<Types.length; j++){
+									if(Types[j].indexOf(val)!=-1){
+										d['TT'] = val; // Store the real value to TT
+										val = Types[j][0];
+									}
+								}
+							d[keys[i][0]] = val;
+						}
+					}, this);
+					return d;
+				};
 				angular.forEach(arr, function(v, k)
 				{
 					var match = k.match(/[0-9]+$/);
-					if(match != null)
-						this.streams[parseInt(match)] = v;
-					//TODO interface it without locale
+					if(match != null){
+						this.streams[match[0]] = this.findTranslation(v);
+
+					}
 					return true;
 				}, this);
-// 				var i = 0;
-// 				while(arr.hasOwnProperty('Stream '+i))
-// 				{
-// 					var c = arr['Stream '+i];
-// 					if(c.Type=='Subtitle')
-// 						subs = true;
-// 					this.streams[i++] = c;
-// 				}
 			},
 			streams: [],
 			select: function(id)
 			{
 				$scope.sendCommand({
-					'command':id == -1 || this.streams[id].Type=='Subtitle' ? 
+					'command':id == -1 || this.streams[id].T=='S' ? 
 						'subtitle_track' : 
 						'audio_track',
 					'val':id});
-// 				$scope.closeModal('streams');
 			}
 		};
 		
-		this.Delay = function(s, t)
-		{
+		// Synchro
+		this.Rate = function(v){
+			var val = Math.round(($scope.status.rate*100 + v*100))/100;
+			if(val<.25 || val > 10)
+				return false;
+			$scope.sendCommand({
+				'command':'rate',
+				'val':val
+			});
+		};
+		this.Delay = function(s, t){
 			var val = t=='a' ? $scope.status.audiodelay : $scope.status.subtitledelay;
 			var del = t=='a' ? confs.settings.audelay : confs.settings.subdelay;
 			$scope.sendCommand({
@@ -617,6 +670,84 @@ var VLCRemote = angular.module('VLCRemote', ['ngTouch', 'pascalprecht.translate'
 				'val': Math.round((val += s ? del : del*-1)*1000)/1000
 			});
 		};
+		
+		//EQ
+		var EQ = function() {
+			angular.element($window.document.getElementById('enableEq')).on('toggle', function(event){
+				$scope.sendCommand({
+					'command': 'enableeq', 
+					'val': angular.element(this).hasClass('active') ? 1 : 0
+				});
+			});
+			
+			var thatEQ = this;
+			this.enabled = function(p){
+				if(!angular.isUndefined($scope.status.equalizer) && angular.isArray($scope.status.equalizer))
+					return false;
+				if(typeof $scope.status.equalizer == 'object' && typeof p != 'undefined')
+					return $scope.status.equalizer.hasOwnProperty(p);
+				return true;
+			}
+			
+			//common setter to server
+			this.timeout = null;
+			this.setter = function(key, val)
+			{
+				$scope.sendCommand(typeof key=='object' ? key : {'command':key, 'val':val});
+			}
+			
+			//preamp
+			this.__defineGetter__('preamp', function(){
+				if(!$scope.status.equalizer) 
+					return false;
+				return this.enabled() ? $scope.status.equalizer.preamp : 0;
+			});
+			this.__defineSetter__('preamp', function(v){
+				if(!this.enabled())	
+					return false;
+				$scope.status.equalizer.preamp = parseFloat(v);
+				this.setter('preamp', this.preamp);
+			});
+			
+			//presets
+			this.prsts = [];
+			this.__defineGetter__('presets', function(){
+				if(!$scope.status.equalizer || !this.enabled())
+					return false;
+				if(this.prsts.length<1 && $scope.status.equalizer.presets)
+					angular.forEach($scope.status.equalizer.presets, function(v, k){
+						if(/[0-9]+/.test(k))
+							this.prsts.push({
+								'id':k.match(/[0-9]+/)[0],
+								'val':v
+							});
+					}, this);				
+				return this.prsts;
+			});
+			this.__defineSetter__('presets', function(v){
+				this.setter('setpreset', v);
+			});
+			
+			//bands
+			this._b = ['60Hz', '170Hz', '310Hz', '600Hz', '1kHz', '3kHz', '6kHz', '12kHz', '14kHz', '16kHz'];
+			this.bands = [];
+			angular.forEach(this._b, function(fq, i){
+				this.bands.push({
+					'id': i,
+					'fq': fq,
+					'val': function(v){
+						if(!$scope.status.equalizer || !thatEQ.enabled())
+							return 0;
+						if(arguments.length)
+							thatEQ.setter({'command':'equalizer', 'band':i, 'val':v});
+						
+						return arguments.length ? ($scope.status.equalizer.bands['band id="'+i+'"']=v) : $scope.status.equalizer.bands['band id="'+i+'"'];
+					}
+				});
+			}, this);
+		};
+		this.EQ = new EQ();
+		
 		
 		// Playlist 
 		$scope.loadPlaylist = function(empty){
@@ -664,8 +795,8 @@ var VLCRemote = angular.module('VLCRemote', ['ngTouch', 'pascalprecht.translate'
 var reloadPlaylist = 0;
 //Consts
 var	
-	video_types = ["asf", "avi", "divx", "drc", "dv", "f4v", "flv", "gxf", "iso", "m1v", "m2v", "m2t", "m2ts", "m4v", "mkv", "mov", "mp2", "mp4", "mpeg", "mpeg1", "mpeg2", "mpeg4", "mpg", "mts", "mtv", "mxf", "mxg", "nuv", "ogg", "ogm", "ogv", "ogx", "ps", "rec", "rm", "rmvb", "ts", "vob", "wmv", "xesc"],
+	video_types = ["asf", "avi", "divx", "drc", "dv", "f4v", "flv", "gxf", "iso", "m1v", "m2v", "m2t", "m2ts", "m4v", "mkv", "mov", "mp2", "mp4", "mpeg", "mpeg1", "mpeg2", "mpeg4", "mpg", "mts", "mtv", "mxf", "mxg", "nuv", "ogg", "ogm", "ogv", "ogx", "ps", "rec", "rm", "rmvb", "ts", "vob", "wmv", "xesc", "webm"],
 	audio_types = ["3ga", "a52", "aac", "ac3", "ape", "awb", "dts", "flac", "it", "m4a", "m4p", "mka", "mlp", "mod", "mp1", "mp2", "mp3", "oga", "ogg", "oma", "s3m", "spx", "thd", "tta", "wav", "wma", "wv", "xm"],
-	playlist_types = ["asx", "b4s", "cue", "ifo", "m3u", "m3u8", "pls", "ram", "rar", "sdp", "vlc", "xspf"],
+	playlist_types = ["asx", "b4s", "cue", "ifo", "m3u", "m3u8", "pls", "ram", "sdp", "vlc", "xspf"],
 	subtitle_types = ['srt', 'idx', 'ass', 'ssa', 'sup'];
-})(window,angular);
+})(angular);

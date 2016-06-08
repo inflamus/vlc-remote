@@ -238,9 +238,13 @@ input[type="url"],
 input[type="tel"],
 input[type="color"],
 .input-group {
-  height: 40px;
-  padding: 10px 15px;
-  border: 1px solid rgba(0, 0, 0, .2);
+/* Fixed by Romein for VLC App */
+/*   height: 40px; */
+/*   padding: 10px 15px; */
+/*   border: 1px solid rgba(0, 0, 0, .2); */
+  height: 34px;
+  padding: 5px 15px;
+  border: 0;
 }
 
 input[type="search"] {
@@ -254,12 +258,12 @@ input[type="search"] {
 input[type="search"]:focus {
   text-align: left;
 }
-
+/* Fixed by Romein for VLC App
 select,
 textarea,
 .input-group {
   height: auto;
-}
+}*/
 
 .input-group {
   padding: 0;
