@@ -375,6 +375,7 @@ var VLCRemote = angular.module('VLCRemote', ['ngTouch', 'pascalprecht.translate'
 	.controller('Status', ['$scope', 'VLC', 'SettingsService', '$filter', '$interval', '$location', '$window', function($scope, VLC, confs, $filter, $interval, $location, $window){
 		var that = this;
 		// Populate the scope
+		$scope.loaded = true; // remove preloading screen
 		$scope.status = {};
 		$scope.error = false;
 		$scope.confs = confs.settings;

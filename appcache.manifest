@@ -12,8 +12,3 @@ js/angular.min.js
 js/angular-touch.min.js
 js/angular-translate.min.js
 js/angular-translate-loader-static-files.min.js
-
-NETWORK:
-/
-angular.html
-*

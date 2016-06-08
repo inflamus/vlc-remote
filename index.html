@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html manifest="appcache.manifest" ng-app="VLCRemote" ng-strict-di>
+<!-- <html manifest="appcache.manifest" ng-app="VLCRemote" ng-strict-di> -->
+<html ng-app="VLCRemote" ng-strict-di>
 <head>
 	<meta charset="utf-8">
 
@@ -84,6 +85,93 @@
 			-webkit-filter:grayscale(1);
 		}
 		
+		div.loader-wrapper {
+			z-index: 1001;
+			position: fixed;
+			top:0;
+			left:0;
+			height: 100%;
+			width: 100%;
+			background: /*#FFE6BF*/ #fff;
+		}
+		div.loader {
+			display: block;
+			position: absolute;
+			left: 50%;
+			top: 50%;
+			width: 150px;
+			height: 150px;
+			margin: -75px 0 0 -75px;
+			border-radius: 50%;
+			border: 3px solid transparent;
+			border-top-color: #da532c;
+			-webkit-animation: spin 2s linear infinite; /* Chrome, Opera 15+, Safari 5+ */
+					animation: spin 2s linear infinite; /* Chrome, Firefox 16+, IE 10+, Opera */
+		}
+		div.loader:before {
+ 			content: ""; 
+			position: absolute;
+			top: 5px;
+			left: 5px;
+			right: 5px;
+			bottom: 5px;
+			border-radius: 50%;
+			border: 3px solid transparent;
+			border-top-color: #5bbad5;
+			-webkit-animation: spin 3s linear infinite; /* Chrome, Opera 15+, Safari 5+ */
+					animation: spin 3s linear infinite; /* Chrome, Firefox 16+, IE 10+, Opera */
+		}
+		div.loader:after {
+			content: "";
+			position: absolute;
+			top: 15px;
+			left: 15px;
+			right: 15px;
+			bottom: 15px;
+			border-radius: 50%;
+			border: 3px solid transparent;
+			border-top-color: #929292;
+			-webkit-animation: spin 1.5s linear infinite; /* Chrome, Opera 15+, Safari 5+ */
+					animation: spin 1.5s linear infinite; /* Chrome, Firefox 16+, IE 10+, Opera */
+		}
+		@-webkit-keyframes spin {
+			0%   {
+				-webkit-transform: rotate(0deg);  /* Chrome, Opera 15+, Safari 3.1+ */
+				-ms-transform: rotate(0deg);  /* IE 9 */
+				transform: rotate(0deg);  /* Firefox 16+, IE 10+, Opera */
+			}
+			100% {
+				-webkit-transform: rotate(360deg);  /* Chrome, Opera 15+, Safari 3.1+ */
+				-ms-transform: rotate(360deg);  /* IE 9 */
+				transform: rotate(360deg);  /* Firefox 16+, IE 10+, Opera */
+			}
+		}
+		@keyframes spin {
+			0%   {
+				-webkit-transform: rotate(0deg);  /* Chrome, Opera 15+, Safari 3.1+ */
+				-ms-transform: rotate(0deg);  /* IE 9 */
+				transform: rotate(0deg);  /* Firefox 16+, IE 10+, Opera */
+			}
+			100% {
+				-webkit-transform: rotate(360deg);  /* Chrome, Opera 15+, Safari 3.1+ */
+				-ms-transform: rotate(360deg);  /* IE 9 */
+				transform: rotate(360deg);  /* Firefox 16+, IE 10+, Opera */
+			}
+		}
+		.loaded div.loader-wrapper {
+			visibility: hidden;
+			-webkit-transform: translateY(100%);  /* Chrome, Opera 15+, Safari 3.1+ */
+				-ms-transform: translateY(100%);  /* IE 9 */
+					transform: translateY(100%);  /* Firefox 16+, IE 10+, Opera */
+			-webkit-transition: all 0.3s 0.3s ease-out; 
+					transition: all 0.3s 0.3s ease-out;
+		}
+		.loaded div.loader {
+			opacity: 0;
+			-webkit-transition: all 0.3s ease-out; 
+					transition: all 0.3s ease-out;
+		}
+		
 	</style>
 	<script type="text/javascript">
 	/* loadCSS <https://github.com/filamentgroup/loadCSS> */
@@ -97,18 +185,29 @@
 
 <!-- JAVASCRIPT -->
 	<!--Angular-->
-	<script type="text/javascript" src="js/angular.min.js">/*modified angular 1.4.8 code, so VLC's lua http server can provide it.*/</script>
-	<script type="text/javascript" src="js/angular-touch.min.js"></script>
-	<script type="text/javascript" src="js/angular-translate.min.js"></script>
-	<script type="text/javascript" src="js/angular-translate-loader-static-files.min.js"></script>
+	<script defer type="text/javascript" src="js/angular.min.js">/*modified angular 1.4.8 code, so VLC's lua http server can provide it.*/</script>
+	<script defer type="text/javascript" src="js/angular-touch.min.js"></script>
+	<script defer type="text/javascript" src="js/angular-translate.min.js"></script>
+	<script defer type="text/javascript" src="js/angular-translate-loader-static-files.min.js"></script>
 	<!--VLC Angular App-->
 	<script defer type="text/javascript" src="js/vlcapp.min.js"></script>
 	<!--Ratchet JS-->
 	<script defer type="text/javascript" src="js/ratchet.custom.min.js"></script>
 
 </head>	
-<body ng-controller="Status as curr">
-	<noscript>This App entirely relies on Javascript (using AngularJS v1.4.8). Please enable it.</noscript>
+<body ng-controller="Status as curr" ng-class="{'loaded':loaded}">
+	<noscript>
+		<style type="text/css">
+			div,header,nav {
+				display: none !important;
+			}
+		</style>
+		<p align="center">This App entirely relies on Javascript (using AngularJS v1.4.8). Please, enable it.</p>
+	</noscript>
+	
+	<div class="loader-wrapper">
+		<div class="loader"></div>
+	</div>
 	
 	<header class="bar bar-nav">
 		<h1 class="title" ng-class="{grayscale:!focused}"><img alt="VideoLan Logo" class="icon" src="img/vlc16x16.png"> VLC - Remote Controller</h1>
