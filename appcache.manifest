@@ -2,11 +2,12 @@ CACHE MANIFEST
 
 CACHE:
 css/ratchet.min.css
-css/ratchet-theme-ios.min.css
+#css/ratchet-theme-ios.min.css
 img/vlc-48.png
 img/vlc16x16.png
-js/ratchet.min.js
-# js/vlcapp.min.js
+#js/ratchet.min.js
+#js/ratchet.custom.min.js
+#js/vlcapp.min.js
 js/angular.min.js
 js/angular-touch.min.js
 js/angular-translate.min.js

@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html manifest="appcache.manifest" ng-app="VLCRemote" ng-strict-di>
-<head ng-controller="Headers">
+<head>
 	<meta charset="utf-8">
 
 	<title>VLC - Remote Controller</title>
@@ -11,14 +11,7 @@
 <!-- Makes your prototype chrome-less once bookmarked to your phone's home screen -->
 	<meta content="yes" name="apple-mobile-web-app-capable">
 	<meta content="white" name="apple-mobile-web-app-status-bar-style">
-<!-- Include the compiled Ratchet CSS -->
-	<link href="css/ratchet.css" rel="stylesheet">
-	<link href="css/ratchet-theme-ios.min.css" rel="stylesheet" ng-if="isIOs()">
-	<style type="text/css" ng-if="isIOs()">
-	.table-view-cell .icon {
-		color: #007aff;
-	}
-	</style>
+
 <!-- Favicons -->
 	<link href="img/favicons/apple-touch-icon-57x57.png" rel="apple-touch-icon" sizes="57x57">
 	<link href="img/favicons/apple-touch-icon-60x60.png" rel="apple-touch-icon" sizes="60x60">
@@ -41,148 +34,84 @@
 	<meta content="img/favicons/browserconfig.xml" name="msapplication-config">
 	<meta content="#ffffff" name="theme-color">
 	
+<!-- CSS -->
+	<!-- Include the compiled Ratchet CSS -->
+	<link href="css/ratchet.min.css" rel="stylesheet" async lazyload>
+	<!-- Style -->
+	<style type="text/css">
+		select {
+			height: inherit;
+		}
+		.input-row select {
+	/* 		height: inherit; */
+	/* 		font-size: inherit; */
+	/* 		background-color:#fff; */
+			float: right;
+			width: 65%;
+	/* 		padding-left: 0; */
+			margin-bottom: 0;
+			border: 0;
+			box-shadow: none;
+			-webkit-box-shadow: none;
+		}
+		
+		li.table-view-cell.media a img.media-object {
+			width: 60px;
+		}
+		li.table-view-cell.primary {
+			background-color: #ffe0cc;
+		}
+		
+		div.modal div.content.footer {
+			padding-bottom: 44px;
+		}
+		
+		.vhidden {
+			visibility: hidden;
+		}
+		
+		.bar-header-secondary .btn > .icon {
+			font-size: 21px;
+			top: 0;
+		}
+		.bar-header-secondary button.btn.pull-right.control-item, .bar-header-secondary > button.btn.pull-left.control-item {
+			padding: 2px 8px;
+		}
+		
+		.grayscale {
+			color: #333;
+			filter: grayscale(1);
+			-webkit-filter:grayscale(1);
+		}
+		
+	</style>
+	<script type="text/javascript">
+	/* loadCSS <https://github.com/filamentgroup/loadCSS> */
+		(function(g){g.loadCSS=function(m,d,n){function e(b){for(var c=a.href,d=h.length;d--;)if(h[d].href===c)return b();setTimeout(function(){e(b)})}function k(a){b.body?a():setTimeout(function(){k(a)})}function f(){a.addEventListener&&a.removeEventListener("load",f);a.media=n||"all"}var b=g.document,a=b.createElement("link"),c;if(d)c=d;else{var l=(b.body||b.getElementsByTagName("head")[0]).childNodes;c=l[l.length-1]}var h=b.styleSheets;a.rel="stylesheet";a.href=m;a.media="only x";k(function(){c.parentNode.insertBefore(a,d?c:c.nextSibling)});a.addEventListener&&a.addEventListener("load",f);a.a=e;e(f);return a}})(window);
+	/* common[.min].css */
+		loadCSS('css/input-range.min.css');
+		if(/(iPad|iPhone|iPod)/g.test(navigator.userAgent)){
+			loadCSS('css/ratchet-theme-ios.min.css');
+		}
+	</script>
+
+<!-- JAVASCRIPT -->
 	<!--Angular-->
 	<script type="text/javascript" src="js/angular.min.js">/*modified angular 1.4.8 code, so VLC's lua http server can provide it.*/</script>
 	<script type="text/javascript" src="js/angular-touch.min.js"></script>
 	<script type="text/javascript" src="js/angular-translate.min.js"></script>
 	<script type="text/javascript" src="js/angular-translate-loader-static-files.min.js"></script>
-	
 	<!--VLC Angular App-->
-	<script defer src="js/vlcapp.min.js" type="text/javascript"></script>
-
+	<script defer type="text/javascript" src="js/vlcapp.min.js"></script>
 	<!--Ratchet JS-->
-	<script defer src="js/ratchet.min.js" type="text/javascript"></script>
+	<script defer type="text/javascript" src="js/ratchet.custom.min.js"></script>
 
-	<style type="text/css">
-	input[type=range] {
-		-webkit-appearance: none;
-		position: relative;
-		top: 8px;
-		left: 0;
-	}
-	input[type=range]:focus {
-		outline: none;
-	}
-	input[type=range]::-webkit-slider-runnable-track {
-		width: 100%;
-		height: 8px;
-		cursor: pointer;
-		box-shadow: 1px 1px 15px #da532c,0 0 1px #de6542;
-		background: rgba(255,255,255,0.96);
-		border-radius: 5px;
-		border: 0 solid #da532c;
-	}
-	input[type=range]::-webkit-slider-thumb {
-		box-shadow: 1px 1px 1px #da532c,0 0 1px #de6542;
-		border: 1px solid #eee;
-		height: 16px;
-		width: 16px;
-		border-radius: 31px;
-		background: #fff;
-		cursor: pointer;
-		-webkit-appearance: none;
-		margin-top: -4px;
-	}
-	input[type=range]:focus::-webkit-slider-runnable-track {
-		background: rgba(255,255,255,0.96);
-	}
-	input[type=range]::-moz-range-track {
-		width: 100%;
-		height: 8px;
-		cursor: pointer;
-		box-shadow: 1px 1px 15px #da532c,0 0 1px #de6542;
-		background: rgba(255,255,255,0.96);
-		border-radius: 5px;
-		border: 0 solid #da532c;
-	}
-	input[type=range]::-moz-range-thumb {
-		box-shadow: 1px 1px 1px #da532c,0 0 1px #de6542;
-		border: 1px solid #eee;
-		height: 16px;
-		width: 16px;
-		border-radius: 31px;
-		background: #fff;
-		cursor: pointer;
-	}
-	input[type=range]::-ms-track {
-		width: 100%;
-		height: 8px;
-		cursor: pointer;
-		background: transparent;
-		border-color: transparent;
-		color: transparent;
-	}
-	input[type=range]::-ms-fill-lower {
-		background: rgba(240,240,240,0.96);
-		border: 0 solid #da532c;
-		border-radius: 10px;
-		box-shadow: 1px 1px 15px #da532c,0 0 1px #de6542;
-	}
-	input[type=range]::-ms-fill-upper {
-		background: rgba(255,255,255,0.96);
-		border: 0 solid #da532c;
-		border-radius: 10px;
-		box-shadow: 1px 1px 15px #da532c,0 0 1px #de6542;
-	}
-	input[type=range]::-ms-thumb {
-		box-shadow: 1px 1px 1px #da532c,0 0 1px #de6542;
-		border: 1px solid #eee;
-		height: 16px;
-		width: 16px;
-		border-radius: 31px;
-		background: #fff;
-		cursor: pointer;
-		height: 8px;
-	}
-	input[type=range]:focus::-ms-fill-lower {
-		background: rgba(255,255,255,0.96);
-	}
-	input[type=range]:focus::-ms-fill-upper {
-		background: rgba(255,255,255,0.96);
-	}
-	.input-row select {
-		height: inherit;
-		font-size: inherit;
-		background-color:#fff;
-		float: right;
-		width: 65%;
-		padding-left: 0;
-		margin-bottom: 0;
-		border: 0;
-		box-shadow: none;
-		-webkit-box-shadow: none;
-	}
-
-	li.table-view-cell.media a img.media-object {
-		width: 60px;
-	}
-	li.table-view-cell.primary {
-		background-color: #ffe0cc;
-	}
-	
-	div.modal div.content.footer {
-		padding-bottom: 44px;
-	}
-	
-	.vhidden {
-		visibility: hidden;
-	}
-	
-	.bar-header-secondary .btn > .icon {
-		font-size: 21px;
-		top: 0;
-	}
-	.bar-header-secondary button.btn.pull-right.control-item, .bar-header-secondary > button.btn.pull-left.control-item {
-		padding: 2px 8px;
-	}
-	</style>
-</head>
-
+</head>	
 <body ng-controller="Status as curr">
 	<noscript>This App entirely relies on Javascript (using AngularJS v1.4.8). Please enable it.</noscript>
-
+	
 	<header class="bar bar-nav">
-		<h1 class="title"><img alt="VideoLan Logo" class="icon" src="img/vlc16x16.png"> VLC - Remote Controller</h1>
+		<h1 class="title" ng-class="{grayscale:!focused}"><img alt="VideoLan Logo" class="icon" src="img/vlc16x16.png"> VLC - Remote Controller</h1>
 		<a class="icon icon-gear pull-right" href="#settings"></a>
 	</header>
 
@@ -212,6 +141,11 @@
 				<li class="input-row">
 					<label>{{'SETTINGS.DEFAULT_PATH' | translate}}</label>
 					<input placeholder="{{s.defaults.browser}}" ng-model="settings.browser" type="text">
+				</li>
+				<li class="table-view-cell">
+					<a href="#browse">
+						<p>{{'SETTINGS.PATH_HELP' | translate}}</p>
+					</a>
 				</li>
 				
 				<li class="table-view-cell">
@@ -298,20 +232,28 @@
 		<header class="bar bar-nav">
 			<a class="icon icon-close pull-right" href="javascript:void(0);" ng-click="closeModal('streams')"></a>
 
-			<h1 class="title"><span class="icon icon-more"></span> {{'STREAMS.TITLE' | translate}}</h1>
+			<h1 class="title"><span class="icon icon-more-vertical"></span> {{'STREAMS.TITLE' | translate}}</h1>
 		</header>
 		<div class="content">
 			<ul class="table-view">
 				<li class="table-view-divider">{{'STREAMS.TRACKS' | translate}}</li>
-				<li class="table-view-cell" ng-repeat="s in curr.streams.streams" ng-if="s.Type!='Video'" ng-swipe-right="curr.streams.select($index)">
+				<li class="table-view-cell" ng-repeat="s in curr.streams.streams" ng-if="s.T&&s.T!='V'">
 					<a href="javascript:void(0);" ng-click="curr.streams.select($index);closeModal('streams');">
-						<span class="media-object pull-left icon" ng-class="{'icon-sound3':s.Type=='Audio', 'icon-bars':s.Type=='Subtitle'}"></span>{{s.Type || 'Unknown'}} {{s.Language}}
+						<span class="media-object pull-left icon" ng-class="{'icon-sound3':s.T=='A', 'icon-bars':s.T=='S'}"></span>{{s.TT || 'Unknown'}} {{s.L}}
 						<p>
-							<span ng-if="s.Channels">{{s.Channels}} </span>
-							<span ng-if="s.Codec && s.Type!='Subtitle'">[{{s.Codec}}<span ng-if="s.Bitrate"> - {{s.Bitrate}}</span>]</span>
+							<span ng-if="s.Ch">{{s.Ch}} </span>
+							<span ng-if="s.C && s.T!='S'">[{{s.C}}<span ng-if="s.B"> - {{s.B}}</span>]</span>
 						</p>
 						<p>{{s.Description}}</p>
 						<button class="btn btn-outlined btn-primary" ng-click="curr.streams.select($index);$event.stopPropagation();" type="button">{{'STREAMS.SELECT' | translate}}</button>
+					</a>
+				</li>
+				<li class="table-view-cell" ng-repeat="s in curr.streams.streams" ng-if="!s.T">
+					<a href="javascript:;">
+						<p ng-repeat="(k,v) in s" ng-if="['T','C','B','Ch','L'].indexOf(k)==-1">
+							{{k}}: {{v}}
+						</p>
+						<span class="badge">{{$index}}</span>
 					</a>
 				</li>
 				<li class="table-view-cell">
@@ -320,7 +262,24 @@
 						<button class="btn btn-outlined btn-negative" type="button" ng-click="curr.streams.select(-1);$event.stopPropagation();">{{'STREAMS.DISABLE' | translate}}</button>
 					</a>
 				</li>
+				
 				<li class="table-view-divider">{{'STREAMS.SYNCHRO' | translate}}</li>
+				<li class="table-view-cell">
+					<span class="media-object pull-left icon icon-play"></span>
+					{{'STREAMS.PLAYBACK_RATE' | translate}} (x{{status.rate}})
+					<ul>
+						<li class="table-view-cell">
+							<span class="media-object pull-left icon icon-forward"></span>
+							{{'STREAMS.HASTEN' | translate}}
+							<button class="btn btn-outlined" ng-click="curr.Rate(.25);">+0.25x</button>
+						</li>
+						<li class="table-view-cell">
+							<span class="media-object pull-left icon icon-back"></span>
+							{{'STREAMS.SLOW_DOWN' | translate}}
+							<button class="btn btn-outlined" ng-click="curr.Rate(-.25);">-0.25x</button>
+						</li>
+					</ul>
+				</li>
 				<li class="table-view-cell">
 					<span class="media-object pull-left icon icon-sound3"></span>
 					{{'STREAMS.AUDIO_DELAY' | translate}} ({{status.audiodelay}} secs)
@@ -328,12 +287,12 @@
 						<li class="table-view-cell">
 							<span class="media-object pull-left icon icon-forward"></span>
 							{{'STREAMS.DELAY' | translate}}
-							<button class="btn" ng-click="curr.Delay(true, 'a');">+{{confs.audelay}} {{'STREAMS.SEC' | translate}}</button>
+							<button class="btn btn-outlined" ng-click="curr.Delay(true, 'a');">+{{confs.audelay}} {{'STREAMS.SEC' | translate}}</button>
 						</li>
 						<li class="table-view-cell">
 							<span class="media-object pull-left icon icon-back"></span>
 							{{'STREAMS.STRETCH' | translate}}
-							<button class="btn" ng-click="curr.Delay(false,'a');">-{{confs.audelay}} {{'STREAMS.SEC' | translate}}</button>
+							<button class="btn btn-outlined" ng-click="curr.Delay(false,'a');">-{{confs.audelay}} {{'STREAMS.SEC' | translate}}</button>
 						</li>
 					</ul>
 				</li>
@@ -344,15 +303,60 @@
 						<li class="table-view-cell">
 							<span class="media-object pull-left icon icon-forward"></span>
 							{{'STREAMS.DELAY' | translate}}
-							<button class="btn" ng-click="curr.Delay(true, 's');">+{{confs.subdelay}} {{'STREAMS.SEC' | translate}}</button>
+							<button class="btn btn-outlined" ng-click="curr.Delay(true, 's');">+{{confs.subdelay}} {{'STREAMS.SEC' | translate}}</button>
 						</li>
 						<li class="table-view-cell">
 							<span class="media-object pull-left icon icon-back"></span>
 							{{'STREAMS.STRETCH' | translate}}
-							<button class="btn" ng-click="curr.Delay(false,'s');">-{{confs.subdelay}} {{'STREAMS.SEC' | translate}}</button>
+							<button class="btn btn-outlined" ng-click="curr.Delay(false,'s');">-{{confs.subdelay}} {{'STREAMS.SEC' | translate}}</button>
 						</li>
 					</ul>
 				</li>
+				
+				<li class="table-view-divider">{{'STREAMS.EQUALIZER' | translate}}</li>
+				<li class="table-view-cell">
+					<label>{{'STREAMS.ENABLE_EQ' | translate}}</label>
+					<div class="toggle" id="enableEq" ng-class="{'active': curr.EQ.enabled()}">
+						<div class="toggle-handle"></div>
+					</div>
+				</li>
+				<li class="table-view-cell" ng-hide="!curr.EQ.enabled('preamp')" style="padding-right:15px;">
+					<span class="media-object pull-left icon icon-sound3"></span>
+					{{'STREAMS.PREAMP' | translate}} ({{curr.EQ.preamp}} dB)
+					<ul>
+						<li class="table-view-cell">
+						<section class="equalizer">
+							<input style="width:100%; position:static;" type="range" value="0" min="-20" max="20" step="0.1" ng-model-options="{updateOn:'mouseup touchend'}" ng-model="curr.EQ.preamp">
+							</section>
+						</li>
+					</ul>
+				</li>
+				<li class="table-view-cell" style="padding-right: 15px;" ng-hide="!curr.EQ.enabled('bands')">
+					<a ng-click="EQOpened = !EQOpened;">
+						<span class="media-object pull-left icon icon-bars" style="transform:rotate(90deg)"></span>
+						{{'STREAMS.EQ'| translate}}  <span class="icon icon-caret" ng-style="EQOpened && {'transform':'rotate(180deg)'} || {'transform':'none'}"></span>
+					</a>
+					<div style="display: flex; width: 100%; flex-direction: column;" ng-hide="!EQOpened">
+						<section id="equalizer" class="vertical equalizer">
+							<em ng-repeat="bands in curr.EQ.bands">
+								<span>{{bands.val()}}</span>
+								<input type="range" value="0" step=".1" min="-20" ng-model="bands.val" ng-model-options="{getterSetter:true,updateOn:'mouseup touchend'}" max="20">
+							</em>
+						</section>
+					</div>
+				</li>
+				<li class="table-view-cell" style="padding-right:15px;" ng-hide="!curr.EQ.enabled('presets')" ng-init="EQPresetsOpened = false;">
+					<a ng-click="EQPresetsOpened = !EQPresetsOpened;" >
+						<span class="media-object pull-left icon icon-compose"></span>
+						{{'STREAMS.PRESETS' | translate}} <span class="icon icon-caret" ng-style="EQPresetsOpened && {'transform':'rotate(180deg)'} || {'transform':'none'}"></span>
+					</a>
+					<div class="content-padded" ng-hide="!EQPresetsOpened">
+						<button class="btn btn-block" ng-click="curr.EQ.presets=prst.id" ng-repeat="prst in curr.EQ.presets">
+							{{prst.val}}
+						</button>
+					</div>
+				</li>
+
 			</ul>
 		</div>
 	</div>
@@ -364,6 +368,13 @@
 
 			<h1 class="title"><span class="icon icon-list"></span> {{'PLAYLIST.TITLE' | translate}}</h1>
 		</header>
+		<div class="bar bar-standard bar-header-secondary">
+			<div class="segmented-control">
+				<a class="control-item" href="javascript:void(0);" ng-class="{active:status.random}" ng-click="p.Pl('random');">{{'PLAYLIST.RANDOM' | translate}}</a>
+				<a class="control-item" href="javascript:void(0);" ng-class="{active:status.repeat}" ng-click="p.Pl('repeat');">{{'PLAYLIST.REPEAT' | translate}}</a>
+				<a class="control-item" href="javascript:void(0);" ng-class="{active:status.loop}" ng-click="p.Pl('loop');">{{'PLAYLIST.LOOP' | translate}}</a>
+			</div>
+		</div>
 		<div class="content footer">
 			<ul class="table-view">
  				<li class="table-view-divider" ng-repeat-start="fold in playlist">{{fold.name}}</li> 
@@ -394,7 +405,7 @@
 			<div class="slide-group">
 				<div class="slide" ng-swipe-right="curr.Swipe(false)" ng-swipe-left="curr.Swipe(true)">
 
-					<img alt="Cover" id="albumArt" fallback-src="img/vlc-48.png" ng-src="{{'/art?'+status.information.category.meta.filename || 'img/vlc-48.png'}}" style="margin: 44px auto 88px; max-width: 100%;">
+					<img alt="Cover" id="albumArt" fallback-src="img/vlc-48.png" ng-src="{{'/art?'+status.information.category.meta.filename || 'img/vlc-48.png'}}" style="margin: 44px auto 88px; max-width: 100%;" ng-class="{grayscale: !focused}">
 
 				</div>
 			</div>
@@ -418,7 +429,7 @@
 		<a class="tab-item" href="javascript:void(0);" ng-click="curr.Stop()">
 			<span class="icon icon-stop"></span><span class="tab-label">{{'BOTTOMBAR.STOP' | translate}}</span>
 		</a>
-		<a class="tab-item" ng-class="{active:status.fullscreen}" ng-click="curr.toggleFullscreen()" href="javascript:void(0);">
+		<a class="tab-item" ng-class="{'active':status.fullscreen}" ng-click="curr.toggleFullscreen()" href="javascript:void(0);">
 			<span class="icon icon-code"></span><span class="tab-label">{{'BOTTOMBAR.FULLSCREEN' | translate}}</span>
 		</a>
 		<a class="tab-item" href="javascript:void(0);" ng-click="curr.Vol(false)">
@@ -440,12 +451,12 @@
 		<div class="content footer">
 			<ul class="table-view" ng-init="b.search=''">
 
-				<li class="table-view-cell" ng-repeat="line in browse.element | filter:b.search | orderBy:[ordering, confs.dirFirst?'type':null, confs.browseOrder] as results" ng-if="line.type=='dir'||(line.type=='file' && b.Ext(line.uri)!==false)" ng-swipe-left="b.load(b.back);">
+				<li class="table-view-cell" ng-repeat="line in browse.element | filter:b.search | orderBy:[ordering, (confs.dirFirst?'type':nullOrd), confs.browseOrder] as results" ng-if="line.type=='dir'||(line.type=='file' && b.Ext(line.uri)!==false)" ng-swipe-left="b.load(b.back);">
 					<!-- Directory -->
 					<a class="navigate-left" href="javascript:void(0);" ng-if="line.name=='..'" ng-init="b.back=line.uri" ng-click="b.load(line.uri)" href="javascript:void(0);">
 						<span class="pull-right">{{'BROWSE.BACK' | translate}}</span>
 					</a>
-					<a class="navigate-right" href="javascript:void(0);" ng-if="line.type=='dir' && line.name !='..'" ng-swipe-right="b.load(line.uri)" ng-click="b.load(line.uri)">{{line.name}}</a>
+					<a class="navigate-right" href="javascript:void(0);" ng-if="line.type=='dir' && line.name !='..'" ng-swipe-right="b.setDefault(line.path)" ng-click="b.load(line.uri)">{{line.name}}</a>
 					
 					<!-- Video / Audio / Subs / Playlist -->
 					<a href="javascript:void(0);" ng-if="e=b.Ext(line.uri)" ng-click="b.Play(line.uri);closeModal('browse');">
@@ -455,7 +466,12 @@
 					</a>
 				</li>
 				<li class="table-view-cell" ng-if="results.length==0">
-					<em>{{'BROWSE.NO_RESULTS' | translate}}</em>
+					<a href="javascript:;" ng-if="b.isMRL()" ng-click="b.Play(b.search);closeModal('browse');">
+						<span class="media-object pull-left icon icon-play"></span>
+						{{b.search}}
+						<button class="btn btn-outlined btn-positive" ng-click="b.Queue(b.search);$event.stopPropagation();"><span class="icon icon-plus"> <span class="icon icon-list"></span></button>
+					</a>
+					<em ng-if="!b.isMRL()">{{'BROWSE.NO_RESULTS' | translate}}</em>
 				</li>
 
 			</ul>
@@ -485,7 +501,7 @@
 	<div class="bar bar-standard bar-footer-secondary" ng-class="{vhidden: status.state=='stopped'}" style="bottom: 50px;">
 		<button class="btn pull-left control-item" ng-click="curr.Seek(false)" type="button">{{curr.pos.val ||0 | seconds | date:'HH:mm:ss'}}</button>
 		<button class="btn pull-right control-item" ng-click="curr.Seek(true)" type="button">{{curr.pos.len ||0 | seconds | date:'HH:mm:ss'}}</button>
-		<input ng-disabled="status.state=='stopped'" max="1" min="0" step=".001" type="range" ng-model="curr.pos.pos" ng-style="sliderSize()" resize>
+		<input ng-disabled="status.state=='stopped'" max="1" min="0" step=".001" type="range" ng-model="curr.pos.pos" ng-model-options="{updateOn:'touchend mouseup', getterSetter:true}" ng-style="sliderSize()" resize>
 	</div>
 
 </body>
