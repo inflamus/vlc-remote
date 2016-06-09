@@ -117,7 +117,7 @@
 			bottom: 5px;
 			border-radius: 50%;
 			border: 3px solid transparent;
-			border-top-color: #5bbad5;
+			border-left-color: #5bbad5;
 			-webkit-animation: spin 3s linear infinite; /* Chrome, Opera 15+, Safari 5+ */
 					animation: spin 3s linear infinite; /* Chrome, Firefox 16+, IE 10+, Opera */
 		}
@@ -130,7 +130,7 @@
 			bottom: 15px;
 			border-radius: 50%;
 			border: 3px solid transparent;
-			border-top-color: #929292;
+			border-bottom-color: #929292;
 			-webkit-animation: spin 1.5s linear infinite; /* Chrome, Opera 15+, Safari 5+ */
 					animation: spin 1.5s linear infinite; /* Chrome, Firefox 16+, IE 10+, Opera */
 		}
@@ -160,14 +160,17 @@
 		}
 		.loaded div.loader-wrapper {
 			visibility: hidden;
-			-webkit-transform: translateY(100%);  /* Chrome, Opera 15+, Safari 3.1+ */
-				-ms-transform: translateY(100%);  /* IE 9 */
-					transform: translateY(100%);  /* Firefox 16+, IE 10+, Opera */
-			-webkit-transition: all 0.3s 0.3s ease-out; 
-					transition: all 0.3s 0.3s ease-out;
+			opacity:0;
+			/*-webkit-transform: translateY(100%);*/  /* Chrome, Opera 15+, Safari 3.1+ */
+			/*	-ms-transform: translateY(100%);*/  /* IE 9 */
+			/*		transform: translateY(100%);*/  /* Firefox 16+, IE 10+, Opera */
+			-webkit-transition: all 0.3s 0.2s ease-out; 
+					transition: all 0.3s 0.2s ease-out;
 		}
 		.loaded div.loader {
-			opacity: 0;
+			/*opacity: 0;*/
+			-webkit-filter: blur(10px);
+					filter: blur(10px);
 			-webkit-transition: all 0.3s ease-out; 
 					transition: all 0.3s ease-out;
 		}
@@ -192,7 +195,7 @@
 	<!--VLC Angular App-->
 	<script defer type="text/javascript" src="js/vlcapp.min.js"></script>
 	<!--Ratchet JS-->
-	<script defer type="text/javascript" src="js/ratchet.custom.min.js"></script>
+	<script async type="text/javascript" src="js/ratchet.custom.min.js"></script>
 
 </head>	
 <body ng-controller="Status as curr" ng-class="{'loaded':loaded}">
