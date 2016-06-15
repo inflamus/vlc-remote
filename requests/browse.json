@@ -29,17 +29,7 @@ vim:syntax=lua
 --package.loaded.httprequests = nil --uncomment to debug changes
 require "httprequests"
 
-if(_GET['command']=="addsubtitle")
-then
-	_GET['val'] = vlc.strings.decode_uri(_GET['val']);
-	if(string.sub(_GET['val'], 0, 7) == 'file://') 
-	then
-		_GET['val'] = string.sub(_GET['val'], 8);
-	end
-	vlc.input.add_subtitle(_GET['val']);
-else
-	httprequests.processcommands()
-end
+httprequests.processcommands()
 
 local browseTable=httprequests.getbrowsetable()
 

@@ -29,14 +29,14 @@ vim:syntax=lua
 --package.loaded.httprequests = nil --uncomment to debug changes
 require "httprequests"
 
-if(_GET['command']=="addsubtitle")
+if(_GET['command']=="addsubtitle" and tonumber(string.gsub(vlc.misc.version(), "[^0-9]", ""),10) <= 215)
 then
-	_GET['val'] = vlc.strings.decode_uri(_GET['val']);
-	if(string.sub(_GET['val'], 0, 7) == 'file://') 
-	then
-		_GET['val'] = string.sub(_GET['val'], 8);
-	end
-	vlc.input.add_subtitle(_GET['val']);
+	_GET['val'] = vlc.strings.decode_uri(_GET['val'])
+-- 	if(string.sub(_GET['val'], 0, 7) == 'file://') 
+-- 	then
+-- 		_GET['val'] = string.sub(_GET['val'], 8)
+-- 	end
+	vlc.input.add_subtitle(_GET['val'])
 else
 	httprequests.processcommands()
 end

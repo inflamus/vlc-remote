@@ -558,10 +558,10 @@
 					<a class="navigate-left" href="javascript:void(0);" ng-if="line.name=='..'" ng-init="b.back=line.uri" ng-click="b.load(line.uri)" href="javascript:void(0);">
 						<span class="pull-right">{{'BROWSE.BACK' | translate}}</span>
 					</a>
-					<a class="navigate-right" href="javascript:void(0);" ng-if="line.type=='dir' && line.name !='..'" ng-swipe-right="b.setDefault(line.path)" ng-click="b.load(line.uri)">{{line.name}}</a>
+					<a class="navigate-right" href="javascript:void(0);" ng-if="line.type=='dir' && line.name !='..'" ng-swipe-right="b.setDefault(line.uri)" ng-click="b.load(line.uri)">{{line.name}}</a>
 					
 					<!-- Video / Audio / Subs / Playlist -->
-					<a href="javascript:void(0);" ng-if="e=b.Ext(line.uri)" ng-click="b.Play(line.uri);closeModal('browse');">
+					<a href="javascript:void(0);" ng-if="e=b.Ext(line.uri)" ng-click="b.Play(line.uri,line.path);closeModal('browse');">
 						<span class="media-object pull-left icon" ng-class="{'icon-bars': e=='s', 'icon-play': ['v','a'].indexOf(e)>-1, 'icon-list':e=='p'}"></span>
 						{{line.name}}
 						<button class="btn btn-outlined btn-positive" ng-click="b.Queue(line.uri);$event.stopPropagation();" ng-if="e!='s'"><span class="icon icon-plus"></span> <span class="icon icon-list"></span></button>
@@ -574,6 +574,12 @@
 						<button class="btn btn-outlined btn-positive" ng-click="b.Queue(b.search);$event.stopPropagation();"><span class="icon icon-plus"> <span class="icon icon-list"></span></button>
 					</a>
 					<em ng-if="!b.isMRL()">{{'BROWSE.NO_RESULTS' | translate}}</em>
+				</li>
+				<!-- windows fail with ../ -->
+				<li class="table-cell-view" ng-if="browse.element.length==0">
+					<a class="navigate-left" href="javascript:;" ng-click="b.load('file://~')">
+						<span class="pull-right">{{'BROWSE.BACK' | translate}}</span>
+					</a>
 				</li>
 
 			</ul>

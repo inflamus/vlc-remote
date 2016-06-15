@@ -333,9 +333,9 @@ var VLCRemote = angular.module('VLCRemote', ['ngTouch', 'pascalprecht.translate'
 		$scope.ordering = function(e){return e.name=='..' ? 0 : 1;};
 		$scope.nullOrd = function(){return 1;};
 		this.load('file://'+$window.encodeURIComponent(confs.settings.browser));
-		this.Play = function(uri){
+		this.Play = function(uri,path){
 			if(this.Ext(uri)=='s')
-				return $scope.sendCommand({'command':'addsubtitle','val':uri});
+				return $scope.sendCommand({'command':'addsubtitle','val':path});
 			$scope.sendCommand({'command':'in_play', 'input':uri});
 			if(reloadPlaylist--)
 				$scope.loadPlaylist();
@@ -366,10 +366,10 @@ var VLCRemote = angular.module('VLCRemote', ['ngTouch', 'pascalprecht.translate'
 		this.isMRL = function(){
 			return /:\/\//.test(this.search);
 		};
-		this.setDefault = function(path){
-// 			dir = dir.replace(/file:\/\//, '');
-			if(confirm("Would you like to make this directory the default one ?\n\n"+path))
-				confs.settings.browser = path;
+		this.setDefault = function(uri){
+			uri = $window.decodeURIComponent(uri).substr(7);
+			if(confirm("Would you like to make this directory the default one ?\n\n"+uri))
+				confs.settings.browser = uri;
 		};
 	}])
 	.controller('Status', ['$scope', 'VLC', 'SettingsService', '$filter', '$interval', '$location', '$window', function($scope, VLC, confs, $filter, $interval, $location, $window){
