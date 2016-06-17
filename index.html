@@ -576,7 +576,7 @@
 					<em ng-if="!b.isMRL()">{{'BROWSE.NO_RESULTS' | translate}}</em>
 				</li>
 				<!-- windows fail with ../ -->
-				<li class="table-cell-view" ng-if="browse.element.length==0">
+				<li class="table-view-cell" ng-if="browse.element.length==0">
 					<a class="navigate-left" href="javascript:;" ng-click="b.load('file://~')">
 						<span class="pull-right">{{'BROWSE.BACK' | translate}}</span>
 					</a>
