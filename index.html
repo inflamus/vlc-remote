@@ -347,7 +347,7 @@
 							<span ng-if="s.C && s.T!='S'">[{{s.C}}<span ng-if="s.B"> - {{s.B}}</span>]</span>
 						</p>
 						<p>{{s.Description}}</p>
-						<button class="btn btn-outlined btn-primary" ng-click="curr.streams.select($index);$event.stopPropagation();" type="button">{{'STREAMS.SELECT' | translate}}</button>
+						<button class="btn btn-outlined btn-primary" ng-click="curr.streams.select($index);$event.stopPropagation();" type="button"><span class="icon icon-check"></span> {{'STREAMS.SELECT' | translate}}</button>
 					</a>
 				</li>
 				<li class="table-view-cell" ng-repeat="s in curr.streams.streams" ng-if="!s.T">
@@ -359,9 +359,9 @@
 					</a>
 				</li>
 				<li class="table-view-cell">
-					<a href="javascript:void(0);" ng-click="curr.streams.select(-1);closeModal('streams');">
-						<span class="media-object pull-left icon icon-bars"></span> {{'STREAMS.DISABLE_SUBS' | translate}}
-						<button class="btn btn-outlined btn-negative" type="button" ng-click="curr.streams.select(-1);$event.stopPropagation();">{{'STREAMS.DISABLE' | translate}}</button>
+					<a href="#browse">
+						<span class="media-object pull-left icon icon-search"></span> {{'STREAMS.DISABLE_SUBS' | translate}}
+						<button type="button" ng-click="curr.streams.select(-1);$event.stopPropagation();" class="btn btn-outlined btn-negative" href="#browse"><span class="icon icon-close"></span> {{'STREAMS.DISABLE' | translate}}</button>
 					</a>
 				</li>
 				

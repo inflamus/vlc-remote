@@ -585,7 +585,9 @@ var VLCRemote = angular.module('VLCRemote', ['ngTouch', 'pascalprecht.translate'
 		//Watcher for Info and Streams
 		$scope.$watch('status', function(newval, oldval){
 			if(newval.information && oldval.information)
-				if(newval.information.category.meta.filename == 	oldval.information.category.meta.filename)
+				if(newval.information.category.meta.filename == 	oldval.information.category.meta.filename &&
+					Object.keys(newval.information.category).length == Object.keys(oldval.information.category).length
+				)
 					return;
 			that.info.buildArr();
 			that.streams.buildArr();
@@ -611,7 +613,7 @@ var VLCRemote = angular.module('VLCRemote', ['ngTouch', 'pascalprecht.translate'
 				this.TypeTranslations = [
 					['V', 'Video', 'Vidéo', 'Vídeo', 'Obraz'],
 					['A', 'Audio', 'Audio', 'Áudio', 'Dźwięk'],
-					['S', 'Subtitle', 'Sous-titres', 'Subtítulo', 'Untertitel', 'Sottotitolo', 'Ondertitel', 'Legenda', 'Napisy'],
+					['S', 'Subtitle', 'Sous-titres', 'Sous-titres ', 'Subtítulo', 'Untertitel', 'Sottotitolo', 'Ondertitel', 'Legenda', 'Napisy'],
 				];
 				this.findTranslation = function(d){
 					var keys = this.keyTranslations;
