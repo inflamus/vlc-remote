@@ -86,11 +86,13 @@
     "AUDIO_DELAY": "Audio Delay (s)",
     "SUB_DELAY": "Subtitles Delay (s)",
     "MISC": "Miscellanious",
+    "TMDB": "Use the external TMDB m*odule to fetch appropriate metadata",
     "VLC_VERSION": "VLC Version"
   },
   "INFO": {
     "TITLE": "Informations",
     "META": "Meta",
+    "TMDB_MORE":"Get more from The Movie Database...",
     "M": {
       "CONTENT_TYPE": "Type",
       "title": "Title",
@@ -115,6 +117,32 @@
       "RECORDING_LOCATION": "Recording Location",
       "Film": "Film",
       "TV Show": "TV Show"
+    },
+    "STATS" : "Statistics",
+    "STATSAUDIO" : "Audio",
+    "STATSVIDEO" : "Video",
+    "STATSINPUT" : "Input / Playing",
+    "STATSOUTPUT" : "Output / Streaming",
+    "S":{
+      "decodedaudio":"Decoded blocks", 
+      "demuxbitrate":"Bitrate",
+      "lostpictures":"Lost pictures",
+      "decodedvideo":"Decoded blocks",
+      "sentbytes":"Sent bytes",
+      "inputbitrate":"Input bitrate", 
+      "lostabuffers":"Lost buffers",
+      "displayedpictures":"Displayed pictures",
+      "readbytes":"Data size",
+      "demuxreadbytes":"Demux read bytes",
+      "demuxcorrupted":"Ingored blocks (corrupted)",
+      "readpackets":"Read packets",
+      "playedabuffers":"Read buffers",
+      "demuxreadpackets":"demux read packets",
+      "averagedemuxbitrate":"Bitrate",
+      "sendbitrate":"Streaming bitrate",
+      "averageinputbitrate":"average input bitrate",
+      "sentpackets":"Sent packets",
+      "demuxdiscontinuity":"Abandonned packets (discontinuity)"
     }
   }  
 }

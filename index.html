@@ -187,15 +187,19 @@
 	</script>
 
 <!-- JAVASCRIPT -->
-	<!--Angular-->
+	<!-- Angular -->
 	<script defer type="text/javascript" src="js/angular.min.js">/*modified angular 1.4.8 code, so VLC's lua http server can provide it.*/</script>
 	<script defer type="text/javascript" src="js/angular-touch.min.js"></script>
 	<script defer type="text/javascript" src="js/angular-translate.min.js"></script>
 	<script defer type="text/javascript" src="js/angular-translate-loader-static-files.min.js"></script>
-	<!--VLC Angular App-->
+	<!-- VLC Angular App -->
 	<script defer type="text/javascript" src="js/vlcapp.min.js"></script>
-	<!--Ratchet JS-->
+	<!-- Ratchet JS -->
 	<script async type="text/javascript" src="js/ratchet.custom.min.js"></script>
+
+	<!-- TMDB JS API -->
+	<script async type="text/javascript" src="js/themoviedb.min.js"></script>
+	<script async type="text/javascript" src="js/video-name-parser.min.js"></script>
 
 </head>	
 <body ng-controller="Status as curr" ng-class="{'loaded':loaded}">
@@ -302,6 +306,14 @@
 				</li>
 
 				<li class="table-view-divider">{{'SETTINGS.MISC' | translate}}</li>
+				<li class="table-view-cell">TMDB Api
+					<div class="toggle" id="TMDB" ng-class="{active: settings.TMDB}">
+						<div class="toggle-handle">
+						</div>
+					</div>
+					<p>{{'SETTINGS.TMDB' | translate}}</p>
+
+				</li>
 				<li class="table-view-cell">{{'SETTINGS.VLC_VERSION' | translate}}
 					<p id="version">{{status.version || "Unknown version"}}</p>
 					<p>API version {{status.apiversion}}</p>
@@ -321,10 +333,72 @@
 			<ul class="table-view">
 				<li class="table-view-divider">{{'INFO.META' | translate}}</li>
 				
-				<li class="table-view-cell" ng-repeat="i in curr.info.infos">{{'INFO.M.'+i.key | translate}}
-					<p>{{i.val}}</p>
+				<li class="table-view-cell" ng-repeat="(key, val) in curr.info.infos">{{'INFO.M.'+key | translate}}
+					<p>{{val}}</p>
 				</li>
+
+				<!-- <li class="table-view-cell" ng-if="curr.info.TMDBid">
+					<a href="javascript:void(0);" ng-click="curr.info.buildTMDBfull()">
+						<p><span class="icon icon-download"></span> 
+							{{'INFO.TMDB_MORE' | translate}}
+						</p>
+					</a>		
+				</li> -->
 				
+				<li class="table-view-divider">{{'INFO.STATS' | translate}}</li>
+
+				<li class="table-view-cell">
+					<span class="media-object pull-left icon icon-sound3"></span>
+					{{'INFO.STATSAUDIO' | translate}}
+					<ul>
+					<li class="table-view-cell" ng-repeat="(k,i) in curr.stats.stats.audio">
+						{{'INFO.S.'+k | translate}}
+						<span class="badge">{{i}}</span>
+					</li>
+				</ul>
+				</li>
+				<li class="table-view-cell">
+					<span class="media-object pull-left icon icon-play"></span>
+					{{'INFO.STATSVIDEO' | translate}}<ul>
+					<li class="table-view-cell" ng-repeat="(k,i) in curr.stats.stats.video">
+						{{'INFO.S.'+k | translate}}
+						<span class="badge">{{i}}</span>
+					</li></ul>
+				</li>
+				<li class="table-view-cell">
+					<span class="media-object pull-left icon icon-forward"></span>
+
+					{{'INFO.STATSINPUT' | translate}}<ul>
+					<li class="table-view-cell" ng-repeat="(k,i) in curr.stats.stats.input">
+						{{'INFO.S.'+k | translate}}
+						<span class="badge">{{i}}</span>
+					</li></ul>
+				</li>
+				<li class="table-view-cell">
+					<span class="media-object pull-left icon icon-share"></span>
+
+					{{'INFO.STATSOUTPUT' | translate}}<ul>
+					<li class="table-view-cell" ng-repeat="(k,i) in curr.stats.stats.output">
+						{{'INFO.S.'+k | translate}}
+						<span class="badge">{{i}}</span>
+					</li></ul>
+				</li>
+				<!-- TODO :: STATS
+				<li class="table-view-divider">{{'INFO.STATS' | translate}}</li>
+				"readbytes":2945542,
+    "demuxreadbytes":1411399, Byte  => kiloBytes in VLC codec
+
+    "inputbitrate":0.13774915039539,
+        "demuxbitrate":0.082124255597591,
+							MBytes/s => kilobits/s in VLC stats view
+
+				  
+
+			Audio =>
+			Video =>
+			Entrée / Lecture =>
+			Sortie / Diffusion =>
+				-->
 			</ul>
 		</div>
 	</div>
@@ -507,8 +581,8 @@
 			<div class="slide-group">
 				<div class="slide" ng-swipe-right="curr.Swipe(false)" ng-swipe-left="curr.Swipe(true)">
 
-					<img alt="Cover" id="albumArt" fallback-src="img/vlc-48.png" ng-src="{{'/art?'+status.information.category.meta.filename || 'img/vlc-48.png'}}" style="margin: 44px auto 88px; max-width: 100%;" ng-class="{grayscale: !focused}">
-
+					<img alt="Cover" id="albumArt" onload="this.style.opacity=1;" fallback-src="img/vlc-48.png" ng-src="{{curr.info.poster_path || '/art?'+status.information.category.meta.filename}}" style="transition: all ease-in-out 0.5s; opacity:0; margin: 44px auto 88px; max-width: 100%;" ng-class="{grayscale: !focused}">
+						
 				</div>
 			</div>
 		</div>

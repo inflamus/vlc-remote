@@ -59,7 +59,7 @@
     "UPDATE_INTERVAL": "Actualisation (sec)",
     "BROWSER": "Ouverture de fichiers",
     "DEFAULT_PATH": "Chemin par d\u00e9faut",
-    "PATH_HELP": "Conseil : glissez votre doigt vers la droite sur une ligne correspondant à un dossier pour définir le chemin par défaut.",
+    "PATH_HELP": "Conseil : glissez votre doigt vers la droite sur une ligne correspondant à un dossier pour d\u00e9finir le chemin par d\u00e9faut.",
     "FOLDERS_FIRST": "Dossiers en premier",
     "FOLDERS_FIRST_HELP": "Ceci affichera les dossiers en haut de liste, avant les fichiers.",
     "ORDERING_BY": "Trier par",
@@ -86,11 +86,13 @@
     "AUDIO_DELAY": "D\u00e9lai audio (s)",
     "SUB_DELAY": "D\u00e9lai sous-titres (s)",
     "MISC": "Autres",
+    "TMDB": "Utiliser l'API TMDB externe pour récupérer les metadonnées",
     "VLC_VERSION": "VLC Version"
   },
   "INFO": {
     "TITLE": "Informations",
     "META": "Tags",
+    "TMDB_MORE":"Obtenir plus d'informations sur The Movie Database...",
     "M": {
       "CONTENT_TYPE": "Type",
       "title": "Titre",
@@ -115,6 +117,32 @@
       "RECORDING_LOCATION": "Lieu d'Enregistrement",
       "Film": "Film",
       "TV Show": "S\u00e9rie"
+    },
+    "STATS" : "Statistiques",
+    "STATSAUDIO" : "Audio",
+    "STATSVIDEO" : "Video",
+    "STATSINPUT" : "Entr\u00e9e / Lecture",
+    "STATSOUTPUT" : "Sortie / Diffusion",
+    "S":{
+      "decodedaudio":"Blocs d\u00e9cod\u00e9s", 
+      "demuxbitrate":"D\u00e9bit",
+      "lostpictures":"Images perdues",
+      "decodedvideo":"Blocs d\u00e9cod\u00e9s",
+      "sentbytes":"Donn\u00e9es envoy\u00e9es",
+      "inputbitrate":"D\u00e9bit d'entr\u00e9e", 
+      "lostabuffers":"Tampons perdus",
+      "displayedpictures":"Images affich\u00e9es",
+      "readbytes":"Taille des donn\u00e9es",
+      "demuxreadbytes":"Taille des donn\u00e9es d\u00e9multiplex\u00e9es",
+      "demuxcorrupted":"Ignor\u00e9s (corruption)",
+      "readpackets":"Paquets lus",
+      "playedabuffers":"Tampons lus",
+      "demuxreadpackets":"Paquets d\u00e9mux lus",
+      "averagedemuxbitrate":"D\u00e9bit",
+      "sendbitrate":"D\u00e9bit de streaming",
+      "averageinputbitrate":"D\u00e9bit moyen d'entr\u00e9e",
+      "sentpackets":"Paquets envoy\u00e9s",
+      "demuxdiscontinuity":"Abandonn\u00e9s (discontinuit\u00e9)"
     }
   }
 }

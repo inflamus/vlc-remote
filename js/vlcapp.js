@@ -164,6 +164,7 @@ var VLCRemote = angular.module('VLCRemote', ['ngTouch', 'pascalprecht.translate'
 				browseOrder: '+name',
 				update: 8,
 				maxVol: true,
+				TMDB: true,
 				chapters: true,
 				forward: 15,
 				backward: 15,
@@ -266,6 +267,12 @@ var VLCRemote = angular.module('VLCRemote', ['ngTouch', 'pascalprecht.translate'
 			var units = ['bytes', 'kB', 'MB', 'GB', 'TB', 'PB'],
 				number = Math.floor(Math.log(bytes) / Math.log(1024));
 			return (bytes / Math.pow(1024, Math.floor(number))).toFixed(precision) +  ' ' + units[number];
+		}
+	})
+	.filter('bitrate', function(){
+		return function(bytes){
+			if (isNaN(parseFloat(bytes)) || !isFinite(bytes)) return '-';
+			return parseInt(bytes*8000) + ' kb/s';
 		}
 	})
 
@@ -508,6 +515,57 @@ var VLCRemote = angular.module('VLCRemote', ['ngTouch', 'pascalprecht.translate'
 		this.Swipe = function(t){
 			return $scope.sendCommand(t ? 'pl_next' : 'pl_previous');
 		};
+
+		this.stats = {
+			stats:{
+				audio:{
+					"decodedaudio":0,
+					"playedabuffers":0,
+					"lostabuffers":0
+				},
+				video:{
+					"decodedvideo":0,
+					"displayedpictures":0,
+					"lostpictures":0
+				},
+				input:{
+//					"readpackets":0,
+					"readbytes":0, // Bytes
+					"inputbitrate":0, //MBytes/s
+					"demuxreadbytes":0, //Bytes
+					"demuxbitrate":0, // MBYtes/s
+					"demuxcorrupted":0,
+					"demuxdiscontinuity":0
+//				"averageinputbitrate":0,
+//				"demuxreadpackets":0,
+//				"averagedemuxbitrate":0,				
+				},
+				output:{
+				"sentpackets":0,
+				"sentbytes":0,					
+				"sendbitrate":0,				
+				},
+			},
+			buildArr: function(){
+				if(!$scope.status.stats) return false;
+				Object.keys(this.stats.audio).forEach(this.populate, this.stats.audio);
+				Object.keys(this.stats.video).forEach(this.populate, this.stats.video);
+				Object.keys(this.stats.input).forEach(this.populateBits, this.stats.input);
+				Object.keys(this.stats.output).forEach(this.populateBits, this.stats.output);
+				return true;
+			},
+			populate: function(k,unused){
+				return this[k] = $scope.status.stats[k];
+			},
+			populateBits: function(k, unused){
+				if(k.toString().match(/bitrate/))
+					return this[k] = $filter('bitrate')($scope.status.stats[k]);
+				if(k.toString().match(/bytes/))
+					return this[k] = $filter('bytes')($scope.status.stats[k]);
+				return this[k] = $scope.status.stats[k];
+			},
+
+		}
 		
 		//Information modal
 		this.info = {
@@ -542,48 +600,208 @@ var VLCRemote = angular.module('VLCRemote', ['ngTouch', 'pascalprecht.translate'
 			buildArr: function()
 			{
 				var arr = $scope.status;
-				if(!arr.information) return false;
+				this.poster_path = null;
+				if(!arr.information) 
+					return false;
+	
 				arr = arr.information.category.meta;
-				var ret = [];
+				var ret = {};
 				angular.forEach(this.keys, function(key, id){
 					if(!arr[key])	return;
 					if(key=='CONTENT_TYPE')
 						if(arr['genre'])
-							return ret.push({
-								'key':arr[key], // Film
-								'val':arr['genre']
-							});
+							return ret[arr[key]] = arr['genre'];
 					if(key=='album' && (arr['CONTENT_TYPE']=='TV Show' || arr['CONTENT_TYPE']=='Film'))	return;
 					if(key=='SUMMARY' && arr['CONTENT_TYPE']=='Film')	return;
 					if(key=='title')
 						if(arr['track_number'])
 							if(arr['track_total'])
-								return ret.push({
-									'key':key,
-									'val':'['+arr['track_number']+'/'+arr['track_total']+'] '+arr[key]
-								});
+								return ret[key] = '['+arr['track_number']+'/'+arr['track_total']+'] '+arr[key];
 							else
-								return ret.push({
-									'key':key,
-									'val':arr['track_number']+'. '+arr[key]
-								});
+								return ret[key] = arr['track_number']+'. '+arr[key];
 					if(key=='date')
-						return ret.push({
-							'key':key,
-							'val':$filter('date')(arr[key], 'longDate'),
-						});
-					return ret.push({
-						'key':key,
-						'val':arr[key]
-					});
+						return ret[key] = $filter('date')(arr[key], 'longDate');
+
+					return ret[key] = arr[key];
 				});
 				this.infos = ret;
+				if($scope.confs.TMDB)
+					this.buildTMDB();
 				return ret;
 			},
-			infos: []
+			buildTMDB: function(){
+				//requires
+				if(!theMovieDb || !parseVideoName) return false;
+				if(!$scope.confs.TMDB) return false;
+
+				var filename=$scope.status.information.category.meta.title || $scope.status.information.category.meta.filename;
+				filename=parseVideoName(filename);
+				var thet = this;
+				// console.log(filename);//debug
+				var errorfunc = function(data){
+					console.log('error with TMDB API');
+					console.log(data);
+				};
+				switch(filename.type){
+					case 'movie':
+					var iteration = 0;
+					var populatefunc = function(data){
+						thet.infos.title = data.results[0].title;
+						thet.TMDBid = data.results[0].id;
+						thet.infos.description = data.results[0].overview;
+						thet.infos.date = $filter('date')(data.results[0].release_date, 'longDate');
+						thet.poster_path = theMovieDb.common.images_uri + "w500"+data.results[0].poster_path;
+						//todo get more infos
+						theMovieDb.movies.getById({id: data.results[0].id}, function(d){
+							//genres
+							if(d.genres.length != 0)
+							{
+								var g = [];
+								d.genres.forEach(function(v){ g.push(v.name)});
+								thet.infos.genre = g.join(", ");
+							} //prodction studio
+							if(d.production_companies.length !=0)
+							{
+								var p = [];
+								d.production_companies.forEach(function(v){
+									p.push(v.name + (v.origin_country != "" ? " ("+ v.origin_country+")" : ''));
+								});
+								thet.infos.PRODUCTION_STUDIO = p.join(", ");
+							}
+						}, errorfunc);
+						//todo get movie credits
+						theMovieDb.movies.getCredits({id: data.results[0].id}, function(d){
+							//crew
+							if(d.crew.length != 0)
+							{
+								var c = {
+									"Director": {key: 'DIRECTOR', data: []},
+									"Producer": {key: 'PRODUCER', data: []},
+									"Executive Producer": {key: 'EXECUTIVE_PRODUCER', data: []},
+									"Writer": {key: 'WRITTEN_BY', data: []},
+									"Director of Photography": {key: 'DIRECTOR_OF_PHOTOGRAPHY', data: []},
+
+								};
+								d.crew.forEach(function(v){
+									if(Object.keys(c).includes(v.job))
+									{
+										c[v.job].data.push(v.name);
+									}													
+								});
+								angular.forEach(c, function(v){
+									if(v.data.length != 0)
+										thet.infos[v.key] = v.data.join(", ");
+								});
+							}
+							//actors && personnages
+							if(d.cast.length != 0)
+							{
+								var a = [], p=[];
+								d.cast.forEach(function(v){
+									a.push(v.name +" ("+v.character+")");
+									p.push(v.character + " ("+v.name+")");
+								});
+								thet.infos.ACTOR = a.join(", ");
+								thet.infos.CHARACTER = p.join(", ");
+							}
+						}, errorfunc);
+					};
+					theMovieDb.search.getMovie({
+					query: filename.name,
+					year: filename.year},
+					function(data){
+						//success
+						if(data.total_results > 0)
+						{
+							populatefunc(data);
+						}
+						else
+						{
+							if(iteration++<1)
+								theMovieDb.search.getMovie({query:filename.name}, function(dete)
+								{
+									if(dete.total_results >0)
+										populatefunc(dete);
+								}, errorfunc);
+							//if no results, tries to search with title only
+						}
+					},
+					errorfunc);
+						
+					break;
+					case 'series':
+					theMovieDb.search.getTv({query: filename.name}, 
+						function(data){
+							//success
+							if(data.total_results > 0)
+							{
+								thet.infos.title = data.results[0].name;
+								thet.TMDBid = data.results[0].id;
+								thet.infos.description = data.results[0].overview;
+								thet.poster_path = theMovieDb.common.images_uri + "w500"+data.results[0].poster_path;
+								//get more infos
+								theMovieDb.tvEpisodes.getById({
+									id: data.results[0].id,
+									season_number: filename.season,
+									episode_number: filename.episode[0]},
+									function(d){
+										thet.infos.title += " "+ d.season_number+"x"+d.episode_number+' - '+d.name;
+										thet.infos.SUMMARY = thet.infos.description;
+										thet.infos.description = d.overview;
+										thet.infos.date = $filter('date')(d.air_date, 'longDate');
+										d.crew.forEach(function(v){
+											switch(v.job){
+												case "Director":
+													thet.infos.DIRECTOR = v.name;
+													break;												
+												case "Writer":
+													thet.infos.WRITTEN_BY = v.name;
+													break;
+												case "Director of Photography":
+													thet.infos.DIRECTOR_OF_PHOTOGRAPHY = v.name;
+													break;
+											}													
+										});
+										thet.infos.ACTOR = [];
+										d.guest_stars.forEach(function(v){
+											thet.infos.ACTOR.push(v.name+" ("+v.character+")");
+										});
+										thet.infos.ACTOR = thet.infos.ACTOR.join(", ");
+									},
+									errorfunc
+								);
+								//get poster of current season
+								theMovieDb.tvSeasons.getById({
+									id: data.results[0].id,
+									season_number:filename.season
+								}, function(d){
+									thet.poster_path = theMovieDb.common.images_uri + "w500"+d.poster_path;
+									thet.infos.SEASON_SYNOPSIS = d.overview;
+									return;
+								}, errorfunc);
+							}
+						}, errorfunc);
+					break;
+					default:
+					case 'other':
+						thet.poster_path = null;
+					break;
+				}
+				
+			},
+			// buildTMDBfull: function(){
+			// 	//TODO : 
+			// 	if(this.TMDBid == null)
+			// 		return false;
+			// },
+			infos: [],
+			TMDBid: null,
+			poster_path: null
 		};
 		//Watcher for Info and Streams
 		$scope.$watch('status', function(newval, oldval){
+			//reload statistics each beacon
+			that.stats.buildArr();
 			if(newval.information && oldval.information)
 				if(newval.information.category.meta.filename == 	oldval.information.category.meta.filename &&
 					Object.keys(newval.information.category).length == Object.keys(oldval.information.category).length
@@ -795,11 +1013,23 @@ var VLCRemote = angular.module('VLCRemote', ['ngTouch', 'pascalprecht.translate'
 	})
 ;
 
+// function MBToKBs(x){
+// 	return parseInt(x*8000)+' kb/s';
+// };
+// function bytesToKb(x){
+// 	let units=['B','KB','MB','GB','TB'];
+// 	let l=0;n=parseInt(x,10)||0;
+// 	while(n>=1024 &&l++)
+// 	{
+// 		n = n/1024;
+// 	}
+// 	return (n.toFixed(n<10 && l>0 ? 1 : 0) + ' '+ units[l]);
+// };
 var reloadPlaylist = 0;
 //Consts
 var	
 	video_types = ["asf", "avi", "divx", "drc", "dv", "f4v", "flv", "gxf", "iso", "m1v", "m2v", "m2t", "m2ts", "m4v", "mkv", "mov", "mp2", "mp4", "mpeg", "mpeg1", "mpeg2", "mpeg4", "mpg", "mts", "mtv", "mxf", "mxg", "nuv", "ogg", "ogm", "ogv", "ogx", "ps", "rec", "rm", "rmvb", "ts", "vob", "wmv", "xesc", "webm"],
-	audio_types = ["3ga", "a52", "aac", "ac3", "ape", "awb", "dts", "flac", "it", "m4a", "m4p", "mka", "mlp", "mod", "mp1", "mp2", "mp3", "oga", "ogg", "oma", "s3m", "spx", "thd", "tta", "wav", "wma", "wv", "xm"],
+	audio_types = ["3ga", "a52", "aac", "ac3", "ape", "awb", "dts", "flac", "it", "m4a", "m4p", "mka", "mlp", "mod", "mp1", "mp2", "mp3", "oga", "ogg", "oma", "opus", "s3m", "spx", "thd", "tta", "wav", "wma", "wv", "xm"],
 	playlist_types = ["asx", "b4s", "cue", "ifo", "m3u", "m3u8", "pls", "ram", "sdp", "vlc", "xspf"],
 	subtitle_types = ['srt', 'idx', 'ass', 'ssa', 'sup'];
 })(angular);
